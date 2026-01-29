@@ -1,0 +1,65 @@
+<div class="flex h-screen">
+    <aside class="w-75 flex flex-col shadow nav-sidebar min-w-75 bg-white static inset-y-0 left-0 z-40">
+        <p-accordion value="0">
+            <p-accordion-panel value="0">
+                <p-accordion-header>Graphic Layer</p-accordion-header>
+                <p-accordion-content>
+                    <div class="flex flex-row items-center space-x-5 justify-center">
+                        <p-button label="Clear" (click)="clearGraphicLayer()" variant="text" [raised]="true" />
+                        <p-button label="Add Demo" (click)="addGraphics()" [raised]="true" />
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+            <p-accordion-panel value="1">
+                <p-accordion-header>Vector Tile Layer</p-accordion-header>
+                <p-accordion-content>
+                    <div class="flex flex-row items-center space-x-5 justify-center">
+                        <p-button label="Hide Demo" variant="text" (click)="hideVectorTile()" [raised]="true" />
+                        <p-button label="Add Demo" (click)="addVectorTile()" [raised]="true" />
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+            <p-accordion-panel value="2">
+                <p-accordion-header>Feature Layer</p-accordion-header>
+                <p-accordion-content>
+                    <div class="flex flex-row items-center space-x-5 justify-center">
+                        <p-button label="Hide Demo" variant="text" (click)="hideFeatureLayer()" [raised]="true" />
+                        <p-button label="Add Demo" (click)="addFeatureLayer()" [raised]="true" />
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+            <p-accordion-panel value="3">
+                <p-accordion-header>Feature Layer (Query)</p-accordion-header>
+                <p-accordion-content>
+                    <div class="flex flex-row items-center space-x-5 justify-center">
+                        <p-button label="Zoom Demo" (click)="zoomFeatureLayer()" [raised]="true" />
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+                        <p-accordion-panel value="4">
+                <p-accordion-header>CSV Layer</p-accordion-header>
+                <p-accordion-content>
+                    <div class="flex flex-col items-center gap-3 p-1">
+                        <p-button label="Hide Demo" (click)="hideCSVLayer()" [raised]="true" severity="contrast" variant="text"/>
+                        <p-button label="Add Demo" (click)="addCSVLayer()" [raised]="true" severity="success"/>
+                        <p-button label="Analysis Demo" (click)="performCSVAnalysis()" [raised]="true" severity="success"/>
+                        <p-button label="Reset Analysis" (click)="resetCSVAnalysis()" [raised]="true" severity="success" />
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+        </p-accordion>
+    </aside>
+
+    <main class="flex-1 bg-gray-100 flex flex-col transition-all duration-300">
+        <header class="h-17.5 bg-white shadow-md flex items-center px-4 z-20 justify-center">
+            <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company"
+                class="h-8 w-auto" /> 
+                <span class="ml-2 text-lg font-semibold text-gray-900">House<span
+                    class="text-[#6366F1]">Buy</span></span>
+        </header>
+
+        <div class="flex-1">
+            <div #mapViewNode></div>
+        </div>
+    </main>
+</div>

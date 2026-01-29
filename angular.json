@@ -26,7 +26,11 @@
             ],
             "styles": [
               "src/styles.css"
-            ]
+            ],
+               "loader": {
+              ".ttf": "file",
+              ".woff2": "file"
+            }
           },
           "configurations": {
             "production": {

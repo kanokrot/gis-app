@@ -1,0 +1,12 @@
+<div pointer-events-auto class="flex flex-1 justify-center">
+    <nav>
+        <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm">
+            <li *ngFor="let item of navItems">
+                <a [routerLink]="item.href" routerLinkActive="bg-white text-teal-500 shadow-sm"
+                   class="relative block px-3 py-2 transition hover:text-teal-500 rounded-full">
+                   {{ item.label }}
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

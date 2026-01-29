@@ -1,0 +1,44 @@
+<div class="flex flex-col space-y-4">
+    <h3 class="text-lg font-medium text-gray-900">Share your feedback</h3>
+    <p class="mt-1 text-sm text-gray-600">If you’ve worked with or interacted with me, freely to share your feedback.
+    </p>
+    <p-button (click)="showReviewDialog()" label="Write a feedback" />
+</div>
+
+<!-- Feedback Dialog -->
+<p-dialog header="Write your feedback" [(visible)]="visible" [modal]="true" [closable]="true"
+    [style]="{ width: '420px' }">
+    <div class="flex flex-col space-y-4">
+        <!-- Name -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Your name
+            </label>
+            <input pInputText [(ngModel)]="review.username" placeholder="Enter your name" class="w-full" />
+        </div>
+
+        <!-- Rating -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Rating
+            </label>
+            <p-rating [(ngModel)]="review.rating"></p-rating>
+        </div>
+
+        <!-- Comment -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Feedback
+            </label>
+            <textarea pInputTextarea [(ngModel)]="review.comment" rows="4" class="w-full"
+                placeholder="Write your feedback..."></textarea>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-2 pt-2">
+            <p-button label="Cancel" severity="secondary" (click)="hideDialog()" />
+            <p-button label="Submit" [disabled]="!review.username || !review.rating || !review.comment || isSubmitting"
+                [loading]="isSubmitting" (click)="submitReview()" />
+        </div>
+    </div>
+</p-dialog>

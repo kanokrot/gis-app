@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import "@arcgis/core/assets/esri/themes/light/main.css";
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+@import "@esri/calcite-components/calcite/calcite.css";
+@import "@arcgis/map-components/main.css";

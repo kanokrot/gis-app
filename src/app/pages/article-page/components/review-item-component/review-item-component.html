@@ -1,0 +1,15 @@
+<div class="py-12 max-w-md">
+    <div class="flex items-center">
+        <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" size="xlarge" shape="circle" class="shrink-0" />
+            <div class="ml-4">
+            <h4 class="text-sm font-bold text-gray-900"> {{ review.username }}
+            </h4>
+            <div class="mt-1 flex items-center">
+                <p-rating [(ngModel)]="review.rating" [readonly]="true" [stars]="5" />
+            </div>
+            <div class="mt-4 space-y-6 text-base text-gray-600 italic">
+        <p>{{ review.comment }}</p>
+    </div>
+        </div>
+    </div>
+</div>
