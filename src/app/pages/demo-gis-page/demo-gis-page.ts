@@ -192,8 +192,8 @@ export class DemoGisPage implements OnInit, OnDestroy, AfterViewInit {
     const point: any = {
       //Create a point
       type: "point",
-      longitude: -118.80657463861,
-      latitude: 34.0005930608889,
+      longitude: 100.524209276,
+      latitude: 13.723754772,
     };
     const simpleMarkerSymbol: any = {
       type: "simple-marker",
@@ -212,9 +212,9 @@ export class DemoGisPage implements OnInit, OnDestroy, AfterViewInit {
     const polyline: any = {
       type: "polyline",
       paths: [
-        [-118.821527826096, 34.0139576938577], //Longitude, latitude
-        [-118.814893761649, 34.0080602407843], //Longitude, latitude
-        [-118.808878330345, 34.0016642996246], //Longitude, latitude
+        [100.512246726, 13.734446479], //Longitude, latitude
+        [100.517553977, 13.729728516], //Longitude, latitude
+        [100.522366322, 13.724611763], //Longitude, latitude
       ],
     };
     const simpleLineSymbol: any = {
@@ -231,11 +231,11 @@ export class DemoGisPage implements OnInit, OnDestroy, AfterViewInit {
     const polygon: any = {
       type: "polygon",
       rings: [
-        [-118.818984489994, 34.0137559967283], //Longitude, latitude
-        [-118.806796597377, 34.0215816298725], //Longitude, latitude
-        [-118.791432890735, 34.0163883241613], //Longitude, latitude
-        [-118.79596686535, 34.008564864635], //Longitude, latitude
-        [-118.808558110679, 34.0035027131376], //Longitude, latitude
+        [100.514281395, 13.734285121], //Longitude, latitude
+        [100.524031709, 13.740545628], //Longitude, latitude
+        [100.536322674, 13.736390983], //Longitude, latitude
+        [100.532695494, 13.730132215], //Longitude, latitude
+        [100.522622498, 13.726082494], //Longitude, latitude
       ],
     };
 
