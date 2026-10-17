@@ -1,65 +1,99 @@
-<div class="flex h-screen">
-    <aside class="w-75 flex flex-col shadow nav-sidebar min-w-75 bg-white static inset-y-0 left-0 z-40">
-        <p-accordion value="0">
-            <p-accordion-panel value="0">
-                <p-accordion-header>Graphic Layer</p-accordion-header>
-                <p-accordion-content>
-                    <div class="flex flex-row items-center space-x-5 justify-center">
-                        <p-button label="Clear" (click)="clearGraphicLayer()" variant="text" [raised]="true" />
-                        <p-button label="Add Demo" (click)="addGraphics()" [raised]="true" />
-                    </div>
-                </p-accordion-content>
-            </p-accordion-panel>
-            <p-accordion-panel value="1">
-                <p-accordion-header>Vector Tile Layer</p-accordion-header>
-                <p-accordion-content>
-                    <div class="flex flex-row items-center space-x-5 justify-center">
-                        <p-button label="Hide Demo" variant="text" (click)="hideVectorTile()" [raised]="true" />
-                        <p-button label="Add Demo" (click)="addVectorTile()" [raised]="true" />
-                    </div>
-                </p-accordion-content>
-            </p-accordion-panel>
-            <p-accordion-panel value="2">
-                <p-accordion-header>Feature Layer</p-accordion-header>
-                <p-accordion-content>
-                    <div class="flex flex-row items-center space-x-5 justify-center">
-                        <p-button label="Hide Demo" variant="text" (click)="hideFeatureLayer()" [raised]="true" />
-                        <p-button label="Add Demo" (click)="addFeatureLayer()" [raised]="true" />
-                    </div>
-                </p-accordion-content>
-            </p-accordion-panel>
-            <p-accordion-panel value="3">
-                <p-accordion-header>Feature Layer (Query)</p-accordion-header>
-                <p-accordion-content>
-                    <div class="flex flex-row items-center space-x-5 justify-center">
-                        <p-button label="Zoom Demo" (click)="zoomFeatureLayer()" [raised]="true" />
-                    </div>
-                </p-accordion-content>
-            </p-accordion-panel>
-                        <p-accordion-panel value="4">
-                <p-accordion-header>CSV Layer</p-accordion-header>
-                <p-accordion-content>
-                    <div class="flex flex-col items-center gap-3 p-1">
-                        <p-button label="Hide Demo" (click)="hideCSVLayer()" [raised]="true" severity="contrast" variant="text"/>
-                        <p-button label="Add Demo" (click)="addCSVLayer()" [raised]="true" severity="success"/>
-                        <p-button label="Analysis Demo" (click)="performCSVAnalysis()" [raised]="true" severity="success"/>
-                        <p-button label="Reset Analysis" (click)="resetCSVAnalysis()" [raised]="true" severity="success" />
-                    </div>
-                </p-accordion-content>
-            </p-accordion-panel>
-        </p-accordion>
-    </aside>
+﻿<div class="stage calcite-mode-dark" [class.sheet-collapsed]="panelCollapsed()" [class.right-panel-open]="rightPanelOpen()">
+  <div #mapViewNode class="map"></div>
+  <div #scaleBarNode class="scale-bar-host" aria-label="Map scale"></div>
 
-    <main class="flex-1 bg-gray-100 flex flex-col transition-all duration-300">
-        <header class="h-17.5 bg-white shadow-md flex items-center px-4 z-20 justify-center">
-            <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company"
-                class="h-8 w-auto" /> 
-                <span class="ml-2 text-lg font-semibold text-gray-900">House<span
-                    class="text-[#6366F1]">Buy</span></span>
-        </header>
+  <aside class="panel glass" [class.collapsed]="panelCollapsed()">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a0a14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span>
+      <span class="name">House<b>Buy</b></span><span class="chip">GIS demo</span>
+      <button class="sheet-toggle" type="button" hidden (click)="togglePanel()" [attr.aria-expanded]="!panelCollapsed()" [attr.aria-label]="panelCollapsed() ? 'Expand map controls' : 'Collapse map controls'"><span aria-hidden="true">{{ panelCollapsed() ? '+' : '−' }}</span></button>
+    </div>
+    <section class="layers-section">
+      <h2>LAYERS</h2>
+      <div class="row"><div><div class="t">Transport network</div><div class="s">{{ transportZoomLabel() }}</div></div><button class="sw" role="switch" aria-label="Transport network" [attr.aria-checked]="transportOn()" (click)="toggleLayer('transport')"><span></span></button></div>
+      <div class="row"><div><div class="t">Points of interest</div><div class="s">Feature layer, OSM</div></div><button class="sw" role="switch" aria-label="Points of interest" [attr.aria-checked]="poiOn()" (click)="toggleLayer('poi')"><span></span></button></div>
+      <div class="row taxi-layer-row"><div><div class="t">Taxi fares</div><div class="s">CSV layer, NYC demo</div></div><div class="taxi-layer-actions">@if (taxiOn()) { <button class="open-analysis" type="button" aria-controls="right-panel" [attr.aria-expanded]="rightPanelOpen()" [attr.aria-label]="rightPanelOpen() ? 'Hide analysis panel' : 'Show analysis panel'" [attr.title]="rightPanelOpen() ? 'Hide analysis panel' : 'Show analysis panel'" (click)="toggleRightPanel()">{{ rightPanelOpen() ? 'Hide panel' : 'Show panel' }}</button> }<button class="sw" role="switch" aria-label="Taxi fares" [attr.aria-checked]="taxiOn()" (click)="toggleLayer('taxi')"><span></span></button></div></div>
+    </section>
+    <section>
+      <h2>PLACES &amp; TOOLS</h2>
+      <div class="tools places-tools">
+        <button class="ghost" (click)="zoomBangkok()">Bangkok</button><button class="ghost" (click)="zoomNewYork()">New York (taxi data)</button>
+        <button class="ghost" (click)="drawDemo()">Draw demo</button><button class="ghost dim" (click)="clearDraw()">Clear</button>
+      </div>
+    </section>
+    <p class="note">Experimental ArcGIS demo. Not a live property marketplace.</p>
+  </aside>
 
-        <div class="flex-1">
-            <div #mapViewNode></div>
+  @if (rightPanelOpen()) {
+    <aside #rightPanel id="right-panel" class="right-panel glass" tabindex="-1" aria-label="Taxi analysis and inspection" (keydown.escape)="closeInspection()">
+      <header class="right-panel__header">
+        <button class="mobile-return" type="button" (click)="closeTaxiPanel()">Layers</button>
+        <div class="inspector-tabs" role="tablist" aria-label="Map information">
+          <button id="analysis-tab" type="button" role="tab" aria-controls="analysis-panel" [attr.aria-selected]="rightPanelTab() === 'analysis'" [attr.tabindex]="rightPanelTab() === 'analysis' ? 0 : -1" (click)="setRightPanelTab('analysis')" (keydown)="inspectorTabKeydown($event)">Analysis</button>
+          <button id="selection-tab" type="button" role="tab" aria-controls="selection-panel" [attr.aria-selected]="rightPanelTab() === 'selection'" [attr.tabindex]="rightPanelTab() === 'selection' ? 0 : -1" (click)="setRightPanelTab('selection')" (keydown)="inspectorTabKeydown($event)">Selected</button>
         </div>
-    </main>
+        <button class="panel-close" type="button" aria-label="Close information panel" title="Close information panel" (click)="closeTaxiPanel()">×</button>
+      </header>
+      @if (rightPanelTab() === 'analysis') {
+        <section id="analysis-panel" class="right-tabpanel" role="tabpanel" aria-labelledby="analysis-tab">
+        @if (taxiOn()) {
+        <section class="taxi-analysis" aria-label="Taxi analysis" [attr.aria-busy]="taxiLoading()">
+          <div class="section-heading"><h2>DATA SUMMARY</h2><span class="taxi-loading-status" aria-live="polite" aria-atomic="true"><span class="taxi-loading-dot" [class.is-loading]="taxiLoading()" aria-hidden="true"></span><span class="visually-hidden">{{ taxiLoading() ? 'Updating taxi statistics' : 'Taxi statistics up to date' }}</span></span><button class="taxi-collapse" type="button" [attr.aria-expanded]="taxiAnalysisExpanded()" aria-controls="taxi-analysis-content" [attr.aria-label]="taxiAnalysisExpanded() ? 'Collapse taxi analysis' : 'Expand taxi analysis'" (click)="toggleTaxiAnalysis()"><span class="taxi-collapse-icon" [class.is-expanded]="taxiAnalysisExpanded()" aria-hidden="true"></span></button></div>
+          @if (taxiAnalysisExpanded()) {
+            <div id="taxi-analysis-content">
+              @if (taxiSourceNotice()) { <p class="taxi-source-notice">Taxi data is from New York City</p> }
+              <div class="seg"><button [class.on]="byFare()" (click)="setColourMode(true)">Colour by fare</button><button [class.on]="!byFare()" (click)="setColourMode(false)">Single colour</button></div>
+              @if (byFare() && fareStops().length) { <div class="fare-scale" aria-label="Taxi fare color scale"><div class="fare-scale__bar" [style.background]="fareGradient()"></div><div class="fare-scale__labels" [attr.aria-label]="fareScaleLabel()">@for (stop of fareStops(); track $index) { <span [style.left.%]="fareStopPosition($index)" [class.label-hidden]="!fareScaleLabelVisible($index)" [attr.title]="formatFare(stop.value)" [attr.aria-label]="formatFare(stop.value)">{{ fareScaleLabelVisible($index) ? formatFare(stop.value) : '' }}</span> }</div></div> }
+              <div class="metrics"><div><span>Visible trips <i>inside current map extent</i></span><b>{{ formatCount(taxiCount()) }}</b></div><div><span>Average fare</span><b>{{ formatCurrency(taxiAverage()) }}</b></div><div><span>Highest fare</span><b>{{ formatCurrency(taxiMaximum()) }}</b></div></div>
+              <p class="coordinate-exclusion">Excluded {{ formatCount(taxiExcludedCount()) }} rides: invalid coordinates (of {{ formatCount(taxiRawCount()) }} total)</p>
+              <details class="taxi-distribution" [open]="fareDistributionExpanded()" (toggle)="setFareDistributionExpanded($event)"><summary><span>{{ formatCount(taxiHistogramCount()) }} filtered rides · Fare distribution</span><span class="taxi-distribution-arrow" aria-hidden="true"></span></summary><div class="taxi-distribution-content">
+                <div class="histogram-heading"><span>Fare distribution</span><button class="reset-filter" (click)="resetTaxiFilter()">Reset filter</button></div><p class="histogram-range">12 bins · P1–P95, with lower and upper tails</p>
+                @if (taxiBins().length) { <div class="histogram" role="img" aria-label="Fare histogram for rides matching the active filters and valid New York coordinates">@for (bin of taxiBins(); track $index) { <span class="histogram-bar" [class.tail-bar]="!!bin.tail" [style.height.%]="taxiBinHeight(bin.count)" [style.background]="bin.color" [attr.title]="bin.label + ': ' + formatCount(bin.count) + ' trips'"></span> }</div><p class="histogram-scale-note">Bar height uses square-root scale</p><div class="tail-counts"><span>Below {{ formatCurrency(taxiLowerPercentile()) }}: {{ formatCount(taxiLowerTail()) }}</span><span>Above {{ formatCurrency(taxiUpperPercentile()) }}: {{ formatCount(taxiUpperTail()) }}</span></div><div class="range-labels"><span>{{ formatFare(taxiFareMin() ?? taxiDomainMin()) }}</span><span>{{ formatFare(taxiFareMax() ?? taxiDomainMax()) }}</span></div>
+                  @if (taxiDomainMin() !== null && taxiDomainMax() !== null) { <div class="range-controls" [style.--fare-ramp]="fareGradient()"><input aria-label="Minimum fare filter" type="range" [min]="taxiDomainMin()" [max]="taxiDomainMax()" [step]="fareStep()" [value]="taxiFareMin() ?? taxiDomainMin()" (input)="setFareBound('min', $event)"><input aria-label="Maximum fare filter" type="range" [min]="taxiDomainMin()" [max]="taxiDomainMax()" [step]="fareStep()" [value]="taxiFareMax() ?? taxiDomainMax()" (input)="setFareBound('max', $event)"></div> }
+                } @else { <p class="empty-analysis">{{ taxiLoading() ? 'Loading fare data…' : 'No fare records in the CSV' }}</p> }
+                <p class="fare-anomaly">Fares at or below $0: <b>{{ formatCount(taxiNonPositive()) }}</b></p><div class="passenger-filters" aria-label="Filter by passengers"><button [class.selected]="passengerMode() === 'all'" (click)="setPassengerMode('all')">All</button><button [class.selected]="passengerMode() === '1'" (click)="setPassengerMode('1')">1</button><button [class.selected]="passengerMode() === '2'" (click)="setPassengerMode('2')">2</button><button [class.selected]="passengerMode() === '3+'" (click)="setPassengerMode('3+')">3+</button></div>
+              </div></details>
+            </div>
+          }
+        </section>
+        } @else { <p class="empty-analysis">Turn on Taxi fares to view the analysis.</p> }
+        </section>
+      } @else {
+        <section id="selection-panel" class="right-tabpanel" role="tabpanel" aria-labelledby="selection-tab">
+          @if (selectedPoi(); as place) {
+            <section class="inspector" aria-label="Selected place"><div class="inspector__title-row"><h3>Selected place</h3></div><p class="selected-place-name">{{ place.title }}</p><dl><div><dt>Coordinates</dt><dd>{{ formatCoordinate(place.latitude) }}, {{ formatCoordinate(place.longitude) }}</dd></div></dl><h4>Tags</h4><dl>@for (tag of place.tags; track tag.key) { <div><dt>{{ tag.key }}</dt><dd>{{ tag.value }}</dd></div> }</dl><button class="clear-selection" type="button" (click)="clearSelection()">Clear selection</button></section>
+          } @else if (selectedTaxi(); as ride) {
+            <section class="inspector" [attr.aria-label]="ride.kind === 'bin' ? 'Selected taxi cell' : 'Selected taxi ride'">
+              <div class="inspector__title-row"><h3>{{ ride.kind === 'bin' ? 'Selected cell' : 'Taxi ride' }}</h3></div>
+              @if (ride.kind === 'bin') {
+                <dl><div><dt>Center</dt><dd>{{ formatCoordinate(ride.latitude) }}, {{ formatCoordinate(ride.longitude) }}</dd></div><div><dt>Cell size</dt><dd>{{ ride.widthKm?.toFixed(2) }} × {{ ride.heightKm?.toFixed(2) }} km</dd></div><div><dt>Rides</dt><dd>{{ formatCount(ride.rides ?? null) }}</dd></div><div><dt>Average fare</dt><dd>{{ formatCurrency(ride.averageFare ?? null) }}</dd></div></dl>
+              } @else {
+                <div class="selected-fare" [style.color]="ride.fare === null || ride.fare === undefined ? null : fareColorFor(ride.fare)">{{ formatCurrency(ride.fare ?? null) }}</div><dl><div><dt>Passengers</dt><dd>{{ ride.passengers }}</dd></div><div><dt>Pickup time</dt><dd>{{ ride.pickup }}</dd></div></dl>
+              }
+              <button class="clear-selection" type="button" (click)="clearSelection()">Clear selection</button>
+            </section>
+          } @else { <div class="selection-hint"><h3>Selected</h3><p>Click a taxi cell, taxi point, or place on the map to inspect it.</p></div> }
+        </section>
+      }
+    </aside>
+  }
+
+  <div class="map-tools">
+    <div class="zoom">
+      <button class="glass compass" type="button" [class.is-north]="isMapFacingNorth()" [attr.aria-label]="compassAriaLabel()" [attr.title]="compassAriaLabel()" [style.transform]="'rotate(' + (-mapRotation()) + 'deg)'" (click)="resetNorth()">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 2 5 21l7-4 7 4-7-19Z" fill="currentColor"/><path d="M12 2v15" stroke="#07060f" stroke-width="1.5"/></svg>
+      </button>
+      <button class="glass" type="button" aria-label="Rotate map left 15 degrees" (click)="rotateMap(-15)">↶</button><button class="glass" type="button" aria-label="Rotate map right 15 degrees" (click)="rotateMap(15)">↷</button>
+      <button class="glass" type="button" aria-label="Zoom in" (click)="zoomIn()" [disabled]="!mapView || mapZoom() >= maxZoom">+</button><button class="glass" type="button" aria-label="Zoom out" (click)="zoomOut()" [disabled]="!mapView || mapZoom() <= minZoom">−</button>
+      <button class="glass" type="button" aria-label="Return to home view" title="Return to home view" (click)="home()">⌂</button>
+      <button class="glass basemap-toggle" type="button" (click)="toggleBasemap()" [attr.aria-label]="satelliteBasemap() ? 'Switch to dark basemap' : 'Switch to satellite basemap'" [attr.title]="satelliteBasemap() ? 'Switch to dark basemap' : 'Switch to satellite basemap'" [attr.aria-pressed]="satelliteBasemap()">
+        @if (satelliteBasemap()) {
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 9-4 9 4-9 4-9-4Z"/><path d="m3 12 9 4 9-4M3 17l9 4 9-4"/></svg>
+        } @else {
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+        }
+      </button>
+    </div>
+  </div>
+  @if (cursorCoordinates()) { <div class="coordinate-readout" aria-live="off">{{ cursorCoordinates() }}</div> }
 </div>
