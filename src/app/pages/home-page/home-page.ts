@@ -9,6 +9,7 @@ import { ImageGalleryComponent } from './components/image-gallery-component/imag
 import { HeroProfileComponent } from './components/hero-profile-component/hero-profile-component';
 import { CommonModule } from '@angular/common';
 import { ThemeToggleComponent } from '../../shared/components/theme-toggle-component/theme-toggle-component';
+import articlesData from '../../data/articles.json';
 
 @Component({
   selector: 'app-home-page',
@@ -17,24 +18,9 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle-compo
   styleUrl: './home-page.css',
 })
 export class HomePage {
-  articleLists = [
-    {
-      title: 'Crafting a design system for a multiplanetary future',
-      description: 'Most companies try to stay ahead of the curve when it comes to visual design, but for Planetaria we needed to create a brand that would still inspire us 100 years from now when humanity has spread across our entire solar system.',
-      href: '/article',
-      publishedAt: 'September 5, 2022',
-    },
-    {
-      title: 'Introducing Animaginary: High performance web animations',
-      description: 'When you’re building a website for a company as ambitious as Planetaria, you need to make an impression. I wanted people to visit our website and see animations that looked more realistic than reality itself.',
-      href: '/article',
-      publishedAt: 'September 2, 2022',
-    },
-    {
-      title: 'Rewriting the cosmOS kernel in Rust',
-      description: 'When we released the first version of cosmOS last year, it was written in Go. Go is a wonderful programming language, but it’s been a while since I’ve seen an article on the front page of Hacker News about rewriting some important tool in Go and I see articles on there about rewriting things in Rust every single week.',
-      href: '/article',
-      publishedAt: 'July 14, 2022',
-    },
-  ]
+  articleLists = articlesData.slice(0, 3).map(article => ({
+    ...article,
+    publishedAt: new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' })
+      .format(new Date(article.date)),
+  }));
 }

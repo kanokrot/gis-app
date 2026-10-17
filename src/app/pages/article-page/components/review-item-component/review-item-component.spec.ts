@@ -14,6 +14,12 @@ describe('ReviewItemComponent', () => {
 
     fixture = TestBed.createComponent(ReviewItemComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('review', {
+      username: 'Test reviewer',
+      rating: 5,
+      comment: 'Helpful feedback',
+    });
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 

@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "fetch:articles": "node scripts/fetch-medium-articles.mjs",
+    "prebuild": "npm run fetch:articles",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

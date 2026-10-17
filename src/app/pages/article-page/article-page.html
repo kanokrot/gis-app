@@ -1,23 +1,111 @@
-<div class="bg-white pt-6">
-    <app-segmented-nav-component />
-    <div
-        class="mx-auto mt-8 bg-white ring-1 ring-zinc-100 max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8 lg:py-32">
-        <div class="lg:col-span-4">
-            <app-review-summary-component [reviews]="reviews"></app-review-summary-component>
-            <div class="mt-10"></div>
-            <app-write-review-component 
-            (reviewSaved)="getReviews()">
-            </app-write-review-component>      
+<div class="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+    <div class="fixed inset-0 flex justify-center sm:px-8 pointer-events-none" aria-hidden="true">
+        <div class="flex w-full max-w-7xl lg:px-8">
+            <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
         </div>
-
-        <div class="mt-16 lg:col-span-7 lg:col-start-6 lg:mt-0 overflow-y-auto max-h-150">
-            <div class="flow-root">
-                <div class="-my-12 divide-y divide-gray-200">
-                    <app-review-item-component
-                        *ngFor="let item of reviews" [review]="item">
-                    </app-review-item-component>
+    </div>
+    <div class="relative flex w-full flex-col">
+        <header class="pointer-events-none relative z-50 flex flex-none flex-col"
+            style="height:var(--header-height);margin-bottom:var(--header-mb)">
+            <div class="top-0 z-10 h-16 pt-6" style="position:var(--header-position)">
+                <div class="sm:px-8 top-(--header-top,--spacing(6)) w-full"
+                    style="position:var(--header-inner-position)">
+                    <div class="mx-auto w-full max-w-7xl lg:px-8">
+                        <div class="relative px-4 sm:px-8 lg:px-12">
+                            <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                                <div class="relative flex gap-4">
+                                    <div class="flex flex-1">
+                                        <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm dark:bg-zinc-800/90 dark:ring-white/10">
+                                            <a aria-label="Home" class="pointer-events-auto" href="/"><img alt=""
+                                                    width="512" height="512" decoding="async"
+                                                    class="h-9 w-9 rounded-full bg-zinc-100 object-cover dark:bg-zinc-800"
+                                                    sizes="2.25rem" src="images/avatar.jpg"></a>
+                                        </div>
+                                    </div>
+                                    <div class="pointer-events-auto"><app-segmented-nav-component /></div>
+                                    <div class="flex justify-end md:flex-1">
+                                        <div class="pointer-events-auto"><app-theme-toggle /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </header>
+
+        <main class="flex-auto">
+            <div class="sm:px-8 mt-16 sm:mt-32">
+                <div class="mx-auto w-full max-w-7xl lg:px-8">
+                    <div class="relative px-4 sm:px-8 lg:px-12">
+                        <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                            <section aria-labelledby="articles-heading">
+                                <p class="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">Articles</p>
+                                <h1 id="articles-heading" class="mt-4 max-w-3xl text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl dark:text-zinc-100">Notes on security, maps, and building things.</h1>
+                                <p class="mt-5 max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-300">CTF walkthroughs and security labs, written up and published on Medium.</p>
+
+                                <div class="mt-9 flex flex-wrap gap-2" aria-label="Filter articles by tag">
+                                    <button *ngFor="let tag of tags()" type="button" [attr.aria-pressed]="selectedTag() === tag"
+                                        (click)="selectTag(tag)"
+                                        class="rounded-full px-4 py-2 text-sm font-semibold ring-1 ring-inset transition"
+                                        [ngClass]="selectedTag() === tag ? 'bg-teal-600 text-white ring-teal-600' : 'bg-white text-zinc-700 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-900 dark:text-zinc-200 dark:ring-zinc-700 dark:hover:bg-zinc-800'">
+                                        {{ tag }}
+                                    </button>
+                                </div>
+
+                                <ng-container *ngIf="featuredArticle() as featured; else noArticles">
+                                    <article class="relative mt-10 overflow-hidden rounded-3xl bg-teal-900 p-7 text-teal-50 shadow-xl shadow-teal-950/10 sm:p-10">
+                                        <a class="absolute inset-0 rounded-3xl focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
+                                            [href]="featured.url" target="_blank" rel="noopener noreferrer"
+                                            [attr.aria-label]="'Read ' + featured.title + ' on Medium'">
+                                            <span class="sr-only">Read on Medium</span>
+                                        </a>
+                                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-teal-200">Featured · {{ featured.date | date:'mediumDate':'UTC' }}</p>
+                                        <h2 class="mt-5 max-w-3xl text-2xl font-bold tracking-tight text-white sm:text-3xl">{{ featured.title }}</h2>
+                                        <p class="mt-4 max-w-2xl leading-7 text-teal-100">{{ featured.summary }}</p>
+                                        <div class="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-white">Read on Medium <span aria-hidden="true">↗</span></div>
+                                    </article>
+
+                                    <ol *ngIf="remainingArticles().length" class="mt-12 border-l border-zinc-200 dark:border-zinc-800">
+                                        <li *ngFor="let article of remainingArticles()" class="relative grid gap-3 py-8 pl-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8 sm:pl-8">
+                                            <span class="absolute -left-[5px] top-10 h-2.5 w-2.5 rounded-full bg-teal-500 ring-4 ring-white dark:ring-zinc-950" aria-hidden="true"></span>
+                                            <time class="text-sm font-medium text-zinc-500 dark:text-zinc-400" [attr.datetime]="article.date">{{ article.date | date:'MMMM d, y':'UTC' }}</time>
+                                            <div>
+                                                <div class="flex flex-wrap gap-2">
+                                                    <span *ngFor="let articleTag of article.tags" class="text-xs font-semibold text-teal-700 dark:text-teal-300">{{ articleTag }}</span>
+                                                </div>
+                                                <h2 class="mt-2 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{{ article.title }}</h2>
+                                                <p class="mt-2 leading-6 text-zinc-600 dark:text-zinc-300">{{ article.summary }}</p>
+                                                <a class="relative z-10 mt-4 inline-flex items-center gap-2 text-sm font-semibold text-teal-700 hover:text-teal-600 dark:text-teal-300 dark:hover:text-teal-200"
+                                                    [href]="article.url" target="_blank" rel="noopener noreferrer">Read on Medium <span aria-hidden="true">↗</span></a>
+                                            </div>
+                                        </li>
+                                    </ol>
+                                </ng-container>
+
+                                <ng-template #noArticles>
+                                    <p class="mt-10 rounded-2xl border border-dashed border-zinc-300 p-8 text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">No articles match this tag yet.</p>
+                                </ng-template>
+                            </section>
+
+                            <section class="mt-24 border-t border-zinc-200 pt-12 dark:border-zinc-800" aria-labelledby="feedback-heading">
+                                <div class="grid gap-10 rounded-3xl bg-zinc-50 p-6 ring-1 ring-zinc-200 sm:p-9 lg:grid-cols-2 dark:bg-zinc-900 dark:ring-zinc-800">
+                                    <div>
+                                        <h2 id="feedback-heading" class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Feedback</h2>
+                                        <div class="mt-4"><app-write-review-component (reviewSaved)="getReviews()"></app-write-review-component></div>
+                                    </div>
+                                    <div>
+                                        <app-review-summary-component [reviews]="reviews"></app-review-summary-component>
+                                        <div class="mt-6 max-h-96 divide-y divide-zinc-200 overflow-y-auto dark:divide-zinc-700">
+                                            <app-review-item-component *ngFor="let review of reviews" [review]="review"></app-review-item-component>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 </div>

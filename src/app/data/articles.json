@@ -1,0 +1,40 @@
+[
+  {
+    "title": "picoMini by CMU-Africa walkthrough pt 1",
+    "url": "https://medium.com/@kanokrot.kim/picomini-by-cmu-africa-walkthrough-pt-1-a01f5992f436",
+    "date": "2026-04-18T16:59:11.000Z",
+    "tags": [
+      "picoctf"
+    ],
+    "summary": "Forensics Riddle Registry อันดับแรกลองดึงข้อความจากใน pdf ออกมาทั้งหมดก่อน ด้วยคำสั่ง pdftotext จากนั้นเราจะได้ไฟล์ txt มา 1 ไฟล์ ซึ่งข้อความก็จะรวมถึง ข้อความท",
+    "image": "https://cdn-images-1.medium.com/max/946/1*bgj_UkCrKGGw5rfAsU2AzA.png"
+  },
+  {
+    "title": "WTCTT 2024 — Walkthrough (Network Security Part)",
+    "url": "https://medium.com/@kanokrot.kim/wtctt-2024-walkthrough-network-security-part-63f5ba7c2fe6",
+    "date": "2026-04-13T19:29:20.000Z",
+    "tags": [
+      "network-security",
+      "wtctt-2024",
+      "ctf",
+      "ctf-writeup",
+      "thailand-ctf"
+    ],
+    "summary": "สวัสดีค่ะ กลับมาเขียน write up ได้อีกแล้วหลังจากโดนแบนบัญชีมาสักพักใหญ่ 😭😭😭 วันนี้ก็เหมือนเดิมค่ะกลับมาเขียนในหมวดเดิมที่เรารักกัน ย้ำตัวใหญ่ ๆ ว่า “เพื่อการ",
+    "image": "https://cdn-images-1.medium.com/max/1024/1*jRNgts80XgC4BK4C-LJUZw.png"
+  },
+  {
+    "title": "CTF Woman Thailand Top Talent 2023 — Write up (Network Security Part)",
+    "url": "https://medium.com/@kanokrot.kim/ctf-woman-thailand-top-talent-2023-write-up-network-security-part-42a437d39c7e",
+    "date": "2025-08-29T13:51:42.000Z",
+    "tags": [
+      "ctf",
+      "cybersecurity",
+      "network-security",
+      "thailand-ctf",
+      "ctf-writeup"
+    ],
+    "summary": "CTF Woman Thailand Top Talent 2023 — Network Security Part ได้กลับมาเขียนอีกครั้งหลังจากห่างหายไปนาน เพราะงานและติดสอบ แต่ตอนนี้ว่างมาเขียนแล้วว คราวนี้เป็นโจทย",
+    "image": "https://cdn-images-1.medium.com/max/810/1*8n7Od2hI6coBDqPo_s4Yww.png"
+  }
+]

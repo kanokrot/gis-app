@@ -1,6 +1,7 @@
 export interface ArticleItem {
   title: string;
-  description: string;
-  href: string;
+  summary: string;
+  url: string;
+  date: string;
   publishedAt: string;
 }

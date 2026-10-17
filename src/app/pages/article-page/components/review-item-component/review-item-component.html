@@ -2,12 +2,12 @@
     <div class="flex items-center">
         <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" size="xlarge" shape="circle" class="shrink-0" />
             <div class="ml-4">
-            <h4 class="text-sm font-bold text-gray-900"> {{ review.username }}
+                <h4 class="text-sm font-bold text-gray-900 dark:text-zinc-100"> {{ review.username }}
             </h4>
             <div class="mt-1 flex items-center">
                 <p-rating [(ngModel)]="review.rating" [readonly]="true" [stars]="5" />
             </div>
-            <div class="mt-4 space-y-6 text-base text-gray-600 italic">
+            <div class="mt-4 space-y-6 text-base text-gray-600 italic dark:text-zinc-300">
         <p>{{ review.comment }}</p>
     </div>
         </div>
