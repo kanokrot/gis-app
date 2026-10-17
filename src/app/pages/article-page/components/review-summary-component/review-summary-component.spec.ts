@@ -24,8 +24,9 @@ describe('ReviewSummaryComponent', () => {
   it('shows the average rating and the count, including zero reviews', () => {
     fixture.componentRef.setInput('reviews', []);
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('—');
-    expect(fixture.nativeElement.textContent).toContain('Based on 0 reviews');
+    expect(fixture.nativeElement.textContent).toContain('–');
+    expect(fixture.nativeElement.textContent).toContain('0 reviews');
+    expect(fixture.nativeElement.textContent).toContain('No feedback yet');
 
     fixture.componentRef.setInput('reviews', [
       { username: 'A', rating: 4, comment: 'Good' },
@@ -33,6 +34,6 @@ describe('ReviewSummaryComponent', () => {
     ]);
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain('4.5');
-    expect(fixture.nativeElement.textContent).toContain('Based on 2 reviews');
+    expect(fixture.nativeElement.textContent).toContain('2 reviews');
   });
 });

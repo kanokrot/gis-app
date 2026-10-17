@@ -25,5 +25,7 @@ describe('ReviewItemComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(fixture.nativeElement.textContent).toContain('T');
+    expect(fixture.nativeElement.querySelector('[role="img"]').getAttribute('aria-label')).toBe('5 out of 5 stars');
   });
 });
