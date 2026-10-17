@@ -8,10 +8,11 @@ import { FooterComponent } from './components/footer-component/footer-component'
 import { ImageGalleryComponent } from './components/image-gallery-component/image-gallery-component';
 import { HeroProfileComponent } from './components/hero-profile-component/hero-profile-component';
 import { CommonModule } from '@angular/common';
+import { ThemeToggleComponent } from '../../shared/components/theme-toggle-component/theme-toggle-component';
 
 @Component({
   selector: 'app-home-page',
-  imports: [CommonModule, SegmentedNavComponent, SocialInfoComponent, ArticleBoxComponent, SubscribeBoxComponent, WorkProfileComponent, FooterComponent, ImageGalleryComponent, HeroProfileComponent],
+  imports: [CommonModule, SegmentedNavComponent, ThemeToggleComponent, SocialInfoComponent, ArticleBoxComponent, SubscribeBoxComponent, WorkProfileComponent, FooterComponent, ImageGalleryComponent, HeroProfileComponent],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })
