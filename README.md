@@ -8,6 +8,7 @@ A personal portfolio website built with Angular. Its **HouseBuy** page appears i
 
 - Home page with profile content, articles, and portfolio navigation.
 - About, Articles, Projects, and Uses pages.
+- Uses page with a concise list of web development and mapping tools: Angular, TypeScript, Tailwind CSS, and ArcGIS Maps SDK.
 - HouseBuy GIS demo linked from the Projects page.
 
 ### HouseBuy GIS demo
