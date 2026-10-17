@@ -1,2 +1,67 @@
-<p>uses-page works!</p>
-<app-segmented-nav-component/>
+<div class="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+    <div class="fixed inset-0 flex justify-center sm:px-8 pointer-events-none" aria-hidden="true">
+        <div class="flex w-full max-w-7xl lg:px-8">
+            <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+        </div>
+    </div>
+    <div class="relative flex w-full flex-col">
+        <header class="pointer-events-none relative z-50 flex h-16 flex-none items-start pt-6">
+            <div class="mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-12">
+                <div class="mx-auto flex max-w-5xl items-center gap-4">
+                    <div class="flex flex-1">
+                        <a aria-label="Home" class="pointer-events-auto h-10 w-10 rounded-full
+                            bg-white/90 p-0.5 shadow-lg ring-1 ring-zinc-900/5 backdrop-blur-sm
+                            dark:bg-zinc-800/90 dark:ring-white/10" href="/">
+                            <img alt="" width="512" height="512" class="h-9 w-9 rounded-full
+                                bg-zinc-100 object-cover dark:bg-zinc-800" src="images/avatar.jpg">
+                        </a>
+                    </div>
+                    <div class="pointer-events-auto"><app-segmented-nav-component /></div>
+                    <div class="flex flex-1 justify-end">
+                        <div class="pointer-events-auto"><app-theme-toggle /></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-auto">
+            <div class="mx-auto mt-16 w-full max-w-7xl px-4 sm:mt-32 sm:px-8 lg:px-12">
+                <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">
+                        Uses
+                    </p>
+                    <h1 class="mt-4 text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl dark:text-zinc-100">
+                        Tools behind my projects.
+                    </h1>
+                    <p class="mt-5 max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-300">
+                        A short list of technologies used to build this portfolio and its mapping demos.
+                    </p>
+
+                    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+                        <section class="rounded-3xl bg-zinc-50 p-7 ring-1 ring-zinc-200
+                            dark:bg-zinc-900 dark:ring-zinc-800">
+                            <h2 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                                Web development
+                            </h2>
+                            <ul class="mt-5 space-y-4 text-zinc-600 dark:text-zinc-300">
+                                <li><strong class="text-zinc-900 dark:text-zinc-100">Angular</strong> · 21</li>
+                                <li><strong class="text-zinc-900 dark:text-zinc-100">TypeScript</strong> · 5.9</li>
+                                <li><strong class="text-zinc-900 dark:text-zinc-100">Tailwind CSS</strong> · 4</li>
+                            </ul>
+                        </section>
+
+                        <section class="rounded-3xl bg-zinc-50 p-7 ring-1 ring-zinc-200
+                            dark:bg-zinc-900 dark:ring-zinc-800">
+                            <h2 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                                Mapping
+                            </h2>
+                            <ul class="mt-5 space-y-4 text-zinc-600 dark:text-zinc-300">
+                                <li><strong class="text-zinc-900 dark:text-zinc-100">ArcGIS Maps SDK for JavaScript</strong> · 4.34</li>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
