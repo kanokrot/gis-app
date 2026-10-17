@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, computed, inject, signal } from '
 import { CommonModule } from '@angular/common';
 import { SegmentedNavComponent } from '../../shared/components/segmented-nav-component/segmented-nav-component';
 import { ThemeToggleComponent } from '../../shared/components/theme-toggle-component/theme-toggle-component';
+import { HomeMarkComponent } from '../../shared/components/home-mark-component/home-mark-component';
 import { ReviewItemComponent } from './components/review-item-component/review-item-component';
 import { WriteReviewComponent } from './components/write-review-component/write-review-component';
 import { ReviewSummaryComponent } from './components/review-summary-component/review-summary-component';
@@ -25,6 +26,7 @@ export interface MediumArticle {
     CommonModule,
     SegmentedNavComponent,
     ThemeToggleComponent,
+    HomeMarkComponent,
     ReviewItemComponent,
     WriteReviewComponent,
     ReviewSummaryComponent,
