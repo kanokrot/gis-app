@@ -14,7 +14,6 @@ export class SegmentedNavComponent {
     { label: 'About', href: '/about' },
     { label: 'Articles', href: '/article' },
     { label: 'Projects', href: '/project' },
-    { label: 'Speaking', href: '/speaking' },
     { label: 'Uses', href: '/uses' },
   ];
 

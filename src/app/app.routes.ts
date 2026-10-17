@@ -17,10 +17,6 @@ export const routes: Routes = [    {
         loadComponent: () => import('./pages/project-page/project-page').then(m => m.ProjectPage)
     },
     {
-        path: 'speaking',
-        loadComponent: () => import('./pages/speaking-page/speaking-page').then(m => m.SpeakingPage)
-    },
-    {
         path: 'uses',
         loadComponent: () => import('./pages/uses-page/uses-page').then(m => m.UsesPage)
     },

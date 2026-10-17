@@ -7,7 +7,7 @@ A personal portfolio website built with Angular. Its **HouseBuy** page appears i
 ### Portfolio website
 
 - Home page with profile content, articles, and portfolio navigation.
-- About, Articles, Projects, Speaking, and Uses pages.
+- About, Articles, Projects, and Uses pages.
 - HouseBuy GIS demo linked from the Projects page.
 
 ### HouseBuy GIS demo
@@ -61,7 +61,6 @@ Routes are lazy-loaded in `src/app/app.routes.ts`.
 | `/about` | About |
 | `/article` | Article |
 | `/project` | Projects |
-| `/speaking` | Speaking |
 | `/uses` | Uses |
 | `/demo-gis` | HouseBuy GIS demo |
 | Any unmatched path | Not Found |
@@ -77,7 +76,6 @@ flowchart TD
     Routes --> About[About page]
     Routes --> Article[Article page]
     Routes --> Projects[Projects page]
-    Routes --> Speaking[Speaking page]
     Routes --> Uses[Uses page]
     Routes --> GIS[HouseBuy demo]
     Projects -->|Project: Real Estate link| GIS
