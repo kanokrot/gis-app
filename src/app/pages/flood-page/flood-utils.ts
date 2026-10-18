@@ -57,6 +57,15 @@ export function buildFloodYearStrip(years: readonly number[]): { year: number; a
   });
 }
 
+export function shouldShowFloodLoading(
+  isUpdating: boolean,
+  visibleAtCurrentScale: boolean,
+  currentScale: number,
+  minimumVisibleScale: number,
+): boolean {
+  return isUpdating && visibleAtCurrentScale && currentScale > 0 && currentScale <= minimumVisibleScale;
+}
+
 export interface FloodRecurrence {
   frequency: number | null;
   years: number[];

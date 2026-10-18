@@ -9,8 +9,9 @@ import MapImageLayer from '@arcgis/core/layers/MapImageLayer.js';
 import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter.js';
 import MapView from '@arcgis/core/views/MapView.js';
 import Point from '@arcgis/core/geometry/Point.js';
+import * as reactiveUtils from '@arcgis/core/core/reactiveUtils.js';
 import * as geometryEngine from '@arcgis/core/geometry/geometryEngine.js';
-import { buildFloodYearStrip, classifyFloodLocation, FLOOD_RECURRENCE_LEGEND, floodRecurrenceColor, toFloodRecurrence, type FloodLocationStatus, type FloodRecurrence } from './flood-utils';
+import { buildFloodYearStrip, classifyFloodLocation, FLOOD_RECURRENCE_LEGEND, floodRecurrenceColor, shouldShowFloodLoading, toFloodRecurrence, type FloodLocationStatus, type FloodRecurrence } from './flood-utils';
 
 const FLOOD_SERVICE = 'https://gistdaportal.gistda.or.th/data/rest/services/FL_Flood/flood_freq11_20/MapServer';
 const PROVINCE_SERVICE = 'https://services1.arcgis.com/jSaRWj2TDlcN1zOC/ArcGIS/rest/services/Thailand_Province_Boundaries_view/FeatureServer/1';
@@ -18,6 +19,7 @@ const POI_SERVICE = 'https://services-ap1.arcgis.com/iA7fZQOnjY9D67Zx/ArcGIS/res
 const FLOOD_QUERY_FIELDS = ['Freq', 'Y_2011', 'Y_2012', 'Y_2013', 'Y_2014', 'Y_2015', 'Y_2016', 'Y2017', 'Y_2018', 'Y_2019', 'Y_2020', 'PV_TN', 'PV_EN'];
 const SOUTHERN_PROVINCE_CODES = ['80', '90', '93', '84', '96', '94', '95', '92', '86', '91', '82', '81'];
 const DEFAULT_FLOOD_OPACITY = 0.78;
+const FLOOD_MIN_VISIBLE_SCALE = 5_500_000;
 
 function stringValue(value: unknown): string | null {
   return typeof value === 'string' && value.trim() ? value.trim() : null;
@@ -43,9 +45,13 @@ export class FloodPage implements AfterViewInit, OnDestroy {
   readonly poiFilterActive = signal(false);
   readonly floodLegend = FLOOD_RECURRENCE_LEGEND;
   readonly floodOpacity = signal(DEFAULT_FLOOD_OPACITY);
+  readonly floodLoading = signal(false);
+  readonly provinceBoundariesVisible = signal(true);
 
   private view: MapView | null = null;
   private clickHandle: { remove(): void } | null = null;
+  private floodLoadingHandle: { remove(): void } | null = null;
+  private floodLoadingTimer: ReturnType<typeof setTimeout> | null = null;
   private disposed = false;
 
   constructor() {
@@ -137,6 +143,7 @@ export class FloodPage implements AfterViewInit, OnDestroy {
         this.serviceError.set('The GISTDA flood layer is unavailable right now. Please try again later.');
         return;
       }
+      void this.watchFloodRendering();
       this.clickHandle = this.view.on('click', (event) => {
         if (!event.mapPoint) return;
         this.clickMarkerLayer.removeAll();
@@ -152,7 +159,10 @@ export class FloodPage implements AfterViewInit, OnDestroy {
         }));
         void this.inspectPoint(event.mapPoint);
       });
-      void this.floodLayer.load().catch(() => this.serviceError.set('The GISTDA flood layer is unavailable right now. Please try again later.'));
+      void this.floodLayer.load().catch(() => {
+        this.clearFloodLoading();
+        this.serviceError.set('The GISTDA flood layer is unavailable right now. Please try again later.');
+      });
       void this.provinceLayer.load().catch(() => undefined);
       void this.filterPoisToSouthernThailand();
     }).catch(() => this.serviceError.set('The map could not be opened. Please refresh and try again.'));
@@ -161,6 +171,8 @@ export class FloodPage implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.disposed = true;
     this.clickHandle?.remove();
+    this.floodLoadingHandle?.remove();
+    this.clearFloodLoading();
     this.view?.destroy();
     this.view = null;
   }
@@ -229,6 +241,46 @@ export class FloodPage implements AfterViewInit, OnDestroy {
     }
   }
 
+  private async watchFloodRendering(): Promise<void> {
+    try {
+      const view = this.view;
+      if (!view) return;
+      const layerView = await view.whenLayerView(this.floodLayer);
+      if (this.disposed) return;
+      this.floodLoadingHandle = reactiveUtils.watch(
+        () => shouldShowFloodLoading(
+          layerView.updating,
+          layerView.visibleAtCurrentScale,
+          view.scale,
+          FLOOD_MIN_VISIBLE_SCALE,
+        ),
+        (isLoading) => this.updateFloodLoading(isLoading),
+        { initial: true },
+      );
+    } catch {
+      this.clearFloodLoading();
+      this.serviceError.set('The GISTDA flood layer is unavailable right now. Please try again later.');
+    }
+  }
+
+  private updateFloodLoading(isLoading: boolean): void {
+    if (!isLoading) {
+      this.clearFloodLoading();
+      return;
+    }
+    if (this.floodLoading() || this.floodLoadingTimer) return;
+    this.floodLoadingTimer = setTimeout(() => {
+      this.floodLoadingTimer = null;
+      if (!this.disposed) this.floodLoading.set(true);
+    }, 300);
+  }
+
+  private clearFloodLoading(): void {
+    if (this.floodLoadingTimer) clearTimeout(this.floodLoadingTimer);
+    this.floodLoadingTimer = null;
+    this.floodLoading.set(false);
+  }
+
   formatYears(years: number[]): string {
     return years.length ? years.join(', ') : 'No year values returned';
   }
@@ -244,6 +296,12 @@ export class FloodPage implements AfterViewInit, OnDestroy {
     if (!layer) return;
     layer.opacity = value;
     this.floodOpacity.set(value);
+  }
+
+  setProvinceBoundariesVisible(event: Event): void {
+    const visible = (event.target as HTMLInputElement).checked;
+    this.provinceLayer.visible = visible;
+    this.provinceBoundariesVisible.set(visible);
   }
 }
 

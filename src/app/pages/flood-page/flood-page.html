@@ -24,7 +24,11 @@
           }
         </div>
       </div>
-      <div class="layer-key"><span class="swatch province-swatch"></span><span>Province boundaries</span></div>
+      <label class="layer-key cursor-pointer">
+        <input id="provinceBoundaries" class="accent-teal-400" type="checkbox" [checked]="provinceBoundariesVisible()"
+          (change)="setProvinceBoundariesVisible($event)">
+        <span class="swatch province-swatch"></span><span>Province boundaries</span>
+      </label>
       <div class="layer-key"><span class="swatch poi-swatch"></span><span>OpenStreetMap POIs · visible at 1:1,200,000 and closer</span></div>
       <div class="rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2">
         <div class="flex items-center justify-between gap-3 text-xs text-zinc-300">
@@ -37,7 +41,13 @@
       @if (!poiFilterActive()) {
         <p class="hint">POIs are contextual and may include places outside the South; flood data covers southern Thailand only.</p>
       }
-      <p class="hint">Flood areas appear when zoomed in. Click the map to inspect a location.</p>
+      @if (floodLoading()) {
+        <div class="rounded-xl border border-zinc-700 bg-zinc-950/70 px-3 py-2" role="status" aria-live="polite">
+          <p class="m-0 text-sm text-zinc-200">Loading flood layer…</p>
+          <p class="hint">Flood areas can take a few seconds to draw. Blank areas may still be loading.</p>
+        </div>
+      }
+      <p class="hint">Click the map to inspect a location.</p>
     </section>
 
     <section class="selection-card" aria-live="polite" aria-label="Location details">

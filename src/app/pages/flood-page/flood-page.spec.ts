@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildFloodYearStrip, classifyFloodLocation, floodRecurrenceColor, floodRecurrenceLabel, toFloodRecurrence } from './flood-utils';
+import { buildFloodYearStrip, classifyFloodLocation, floodRecurrenceColor, floodRecurrenceLabel, shouldShowFloodLoading, toFloodRecurrence } from './flood-utils';
 
 describe('toFloodRecurrence', () => {
   it('converts observed binary year fields and preserves province labels', () => {
@@ -81,5 +81,15 @@ describe('buildFloodYearStrip', () => {
 
   it('keeps the entire period visible when no flood years were recorded', () => {
     expect(buildFloodYearStrip([]).every((entry) => !entry.affected)).toBe(true);
+  });
+});
+
+describe('shouldShowFloodLoading', () => {
+  it('shows loading only for an updating flood layer inside its visible scale range', () => {
+    expect(shouldShowFloodLoading(true, true, 1_000_000, 5_500_000)).toBe(true);
+    expect(shouldShowFloodLoading(false, true, 1_000_000, 5_500_000)).toBe(false);
+    expect(shouldShowFloodLoading(true, false, 1_000_000, 5_500_000)).toBe(false);
+    expect(shouldShowFloodLoading(true, true, 8_000_000, 5_500_000)).toBe(false);
+    expect(shouldShowFloodLoading(true, true, 5_500_000, 5_500_000)).toBe(true);
   });
 });
