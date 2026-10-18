@@ -1,6 +1,6 @@
 # GIS App
 
-A personal portfolio website built with Angular. Its **HouseBuy** page appears in Projects as **Project: Real Estate**. HouseBuy is an experimental ArcGIS mapping demo; it is not a real estate buying or selling service, and it does not provide live property listings.
+A personal portfolio website built with Angular. Its **HouseBuy** page appears in Projects as **HouseBuy GIS demo**. HouseBuy is an experimental ArcGIS mapping demo; it is not a real estate buying or selling service, and it does not provide live property listings.
 
 ## Features
 
@@ -11,6 +11,7 @@ A personal portfolio website built with Angular. Its **HouseBuy** page appears i
 - Uses page with a concise list of web development and mapping tools: Angular, TypeScript, Tailwind CSS, and ArcGIS Maps SDK.
 - HouseBuy GIS demo linked from the Projects page.
 - Southern Thailand Flood Explorer at `/flood`, linked from the Projects page and available as a direct lazy-loaded route; it is not in the navigation pill.
+- **Rice, sugarcane & machinery use by province** at `/agriculture`, linked from the Projects page and available as a direct lazy-loaded route; it is not in the navigation pill.
 
 ### HouseBuy GIS demo
 
@@ -27,6 +28,13 @@ A personal portfolio website built with Angular. Its **HouseBuy** page appears i
 - Uses an ArcGIS `MapImageLayer` for server-rendered flood polygons, the existing Thailand province-boundary service for outlines and location checks, and OSM places that appear when zoomed in.
 - Clicking the map queries the flood service at the selected point and queries the province boundary. The page reports recurrence and recorded years when a polygon intersects, distinguishes a covered province with no matching polygon from locations outside the dataset coverage, and shows an error state when a service request fails.
 - This is historical data, not a live flood map. Coverage density varies substantially by province; Krabi and Phang-nga have very few records, and the dataset may be incomplete. Follow official announcements for safety decisions.
+
+### Rice, sugarcane & machinery use by province
+
+- Compares wet-season rice planted area, forecast sugarcane planted area (`CaneArea`), and the share of holders reporting any machinery use by province.
+- Uses provincial records bundled in `src/app/pages/agriculture-page/province-data.json` and province geometries queried from the existing Thailand province-boundary service. The page supports choropleth colors, dot-density views for rice and sugarcane, province hover and click details, and a keyboard-accessible Top 10 list.
+- Rice and sugarcane values are for crop/production year 2565/66. Rice area is in rai; the sugarcane unit is not confirmed. The machinery share is calculated from holders reporting machinery use divided by holders reporting, but the year is not stated in the supplied file (the NSO catalog identifies 2566).
+- These are province-level summaries, not household-level records. Machinery data does not identify machine types. Dot positions are randomized within provinces and do not represent actual field locations; sugarcane dot units are unconfirmed.
 
 ## Tech stack
 
@@ -73,6 +81,7 @@ Routes are lazy-loaded in `src/app/app.routes.ts`.
 | `/uses` | Uses |
 | `/demo-gis` | HouseBuy GIS demo |
 | `/flood` | Southern Thailand Flood Explorer |
+| `/agriculture` | Rice, sugarcane & machinery use by province |
 | Any unmatched path | Not Found |
 
 ## Application flow
@@ -89,7 +98,10 @@ flowchart TD
     Routes --> Uses[Uses page]
     Routes --> GIS[HouseBuy demo]
     Routes --> Flood[Southern Thailand Flood Explorer]
-    Projects -->|Project: Real Estate link| GIS
+    Routes --> Agriculture[Rice, sugarcane & machinery use by province]
+    Projects -->|HouseBuy GIS demo link| GIS
+    Projects -->|Flood Explorer link| Flood
+    Projects -->|Rice, sugarcane and machinery link| Agriculture
     Routes -. unmatched URL .-> Fallback
 ```
 
@@ -210,9 +222,16 @@ The Flood Explorer additionally requests these public ArcGIS services:
 - [Thailand_Province_Boundaries_view feature service](https://services1.arcgis.com/jSaRWj2TDlcN1zOC/ArcGIS/rest/services/Thailand_Province_Boundaries_view/FeatureServer/1) — province outlines and point-in-province queries. Service attribution: Globetech Co.,Ltd., MERKATOR Co.,Ltd.
 - [OSM_AS_POIs feature service](https://services-ap1.arcgis.com/iA7fZQOnjY9D67Zx/ArcGIS/rest/services/OSM_AS_POIs/FeatureServer/0) — OSM places, shown at closer map scales.
 
+The Agriculture Explorer uses the province-boundary feature service above to retrieve province geometries. Its indicator values are bundled in `src/app/pages/agriculture-page/province-data.json` from these named sources:
+
+- Office of Agricultural Economics (OAE) — wet-season rice planted area for 2565/66, reported in rai; the bundled metadata identifies the license as Open Data Common.
+- Office of the Cane and Sugar Board (OCSB) — forecast planted area (`CaneArea`) for 2565/66; the supplied dictionary does not confirm the unit or license.
+- National Statistical Office (NSO) — counts of holders reporting machinery use and holders reporting; the supplied CSV does not state a year, while the catalog identifies 2566. The bundled metadata identifies the license as CC BY.
+- Province boundaries are credited in the page to Globetech Co.,Ltd. and MERKATOR Co.,Ltd.; the reuse license is not confirmed.
+
 ## Known limitations
 
 - HouseBuy is an ArcGIS experiment, not a real estate marketplace or transaction system.
-- The latest production build reported an initial bundle of **901.35 kB**, above the configured **500 kB** budget.
 - GISTDA flood data is historical and its reuse license is unspecified in the service metadata. It must not be treated as a live flood warning or a complete record of all flood-prone locations.
+- Agriculture indicators are aggregated by province. The sugarcane unit and reuse license, and the province-boundary reuse license, are not confirmed in the bundled metadata.
 - Diagnostic `console` logging remains in `src/app/pages/demo-gis-page/demo-gis-page.ts`.
