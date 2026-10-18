@@ -10,6 +10,7 @@ A personal portfolio website built with Angular. Its **HouseBuy** page appears i
 - About, Articles, Projects, and Uses pages.
 - Uses page with a concise list of web development and mapping tools: Angular, TypeScript, Tailwind CSS, and ArcGIS Maps SDK.
 - HouseBuy GIS demo linked from the Projects page.
+- Southern Thailand Flood Explorer at `/flood`, available as a direct lazy-loaded route and not in the navigation pill.
 
 ### HouseBuy GIS demo
 
@@ -19,6 +20,13 @@ A personal portfolio website built with Angular. Its **HouseBuy** page appears i
 - OSM points of interest with halo labels at close scales and a heatmap at wider scales.
 - Bangkok boundary query and outline from a province feature service.
 - New York City taxi fare analysis from a CSV layer: geohash-based fare ramp, fare-colored points, aggregated map bins, histogram, passenger and fare filters, summary metrics, and an inspector for selected places, rides, and bins.
+
+### Southern Thailand Flood Explorer
+
+- Historical GISTDA recurrent flood-prone areas for 2011–2020, covering 12 southern provinces: Nakhon Si Thammarat, Songkhla, Phatthalung, Surat Thani, Narathiwat, Pattani, Yala, Trang, Chumphon, Satun, Phang-nga, and Krabi.
+- Uses an ArcGIS `MapImageLayer` for server-rendered flood polygons, the existing Thailand province-boundary service for outlines and location checks, and OSM places that appear when zoomed in.
+- Clicking the map queries the flood service at the selected point and queries the province boundary. The page reports recurrence and recorded years when a polygon intersects, distinguishes a covered province with no matching polygon from locations outside the dataset coverage, and shows an error state when a service request fails.
+- This is historical data, not a live flood map. Coverage density varies substantially by province; Krabi and Phang-nga have very few records, and the dataset may be incomplete. Follow official announcements for safety decisions.
 
 ## Tech stack
 
@@ -64,6 +72,7 @@ Routes are lazy-loaded in `src/app/app.routes.ts`.
 | `/project` | Projects |
 | `/uses` | Uses |
 | `/demo-gis` | HouseBuy GIS demo |
+| `/flood` | Southern Thailand Flood Explorer |
 | Any unmatched path | Not Found |
 
 ## Application flow
@@ -79,8 +88,27 @@ flowchart TD
     Routes --> Projects[Projects page]
     Routes --> Uses[Uses page]
     Routes --> GIS[HouseBuy demo]
+    Routes --> Flood[Southern Thailand Flood Explorer]
     Projects -->|Project: Real Estate link| GIS
     Routes -. unmatched URL .-> Fallback
+```
+
+### Flood Explorer location-check flow
+
+The flood page starts over Southern Thailand with a GISTDA map-image layer and province outlines. A click sends two point queries in parallel: an intersect query to GISTDA for `Freq`, the 2011–2020 fields, and province labels; and an intersect query to the province-boundary service for province name and code. The result is classified as a recorded flood-prone area, a covered province with no matching polygon, or outside the 12-province coverage. Query failures are shown as errors rather than being interpreted as an outside-coverage result.
+
+```mermaid
+flowchart TD
+    Click[Click map] --> FloodQuery[Query GISTDA at point]
+    Click --> ProvinceQuery[Query province boundary at point]
+    FloodQuery --> FloodMatch{Flood polygon returned?}
+    FloodMatch -->|Yes| Recurrence[Show Freq, recorded years, and province]
+    FloodMatch -->|No| Coverage{Province in the 12-province dataset?}
+    ProvinceQuery --> Coverage
+    Coverage -->|Yes| Empty[Show no recorded polygon for this dataset]
+    Coverage -->|No| Outside[Show outside dataset coverage]
+    FloodQuery -->|Failure| Error[Show service error]
+    ProvinceQuery -->|Failure| Error
 ```
 
 ### HouseBuy startup and layer requests
@@ -176,8 +204,15 @@ HouseBuy requests these remote sources, so an internet connection is required:
 - [Thailand_Province_Boundaries_view feature service](https://services1.arcgis.com/jSaRWj2TDlcN1zOC/ArcGIS/rest/services/Thailand_Province_Boundaries_view/FeatureServer/1) — Bangkok boundary query.
 - [jeffprosise/Machine-Learning taxi-fares.csv](https://github.com/jeffprosise/Machine-Learning/blob/master/Data/taxi-fares.csv) — New York City pickup coordinates and fare attributes.
 
+The Flood Explorer additionally requests these public ArcGIS services:
+
+- [GISTDA recurrent flood-prone areas, 2011–2020](https://gistdaportal.gistda.or.th/data/rest/services/FL_Flood/flood_freq11_20/MapServer/0) — server-rendered polygons and point queries; the layer covers only the 12 southern provinces. No API key is required by the current service endpoint. The service metadata did not specify a reuse license; contact GISTDA before redistribution.
+- [Thailand_Province_Boundaries_view feature service](https://services1.arcgis.com/jSaRWj2TDlcN1zOC/ArcGIS/rest/services/Thailand_Province_Boundaries_view/FeatureServer/1) — province outlines and point-in-province queries. Service attribution: Globetech Co.,Ltd., MERKATOR Co.,Ltd.
+- [OSM_AS_POIs feature service](https://services-ap1.arcgis.com/iA7fZQOnjY9D67Zx/ArcGIS/rest/services/OSM_AS_POIs/FeatureServer/0) — OSM places, shown at closer map scales.
+
 ## Known limitations
 
 - HouseBuy is an ArcGIS experiment, not a real estate marketplace or transaction system.
-- The latest production build reported an initial bundle of **878.60 kB**, above the configured **500 kB** budget.
+- The latest production build reported an initial bundle of **901.35 kB**, above the configured **500 kB** budget.
+- GISTDA flood data is historical and its reuse license is unspecified in the service metadata. It must not be treated as a live flood warning or a complete record of all flood-prone locations.
 - Diagnostic `console` logging remains in `src/app/pages/demo-gis-page/demo-gis-page.ts`.
