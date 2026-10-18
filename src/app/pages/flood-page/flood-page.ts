@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import Map from '@arcgis/core/Map.js';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer.js';
 import MapImageLayer from '@arcgis/core/layers/MapImageLayer.js';
 import MapView from '@arcgis/core/views/MapView.js';
 import Point from '@arcgis/core/geometry/Point.js';
-import { toFloodRecurrence, type FloodRecurrence } from './flood-utils';
+import { classifyFloodLocation, toFloodRecurrence, type FloodLocationStatus, type FloodRecurrence } from './flood-utils';
 
 const FLOOD_SERVICE = 'https://gistdaportal.gistda.or.th/data/rest/services/FL_Flood/flood_freq11_20/MapServer';
 const PROVINCE_SERVICE = 'https://services1.arcgis.com/jSaRWj2TDlcN1zOC/ArcGIS/rest/services/Thailand_Province_Boundaries_view/FeatureServer/1';
@@ -25,8 +26,10 @@ function stringValue(value: unknown): string | null {
 })
 export class FloodPage implements AfterViewInit, OnDestroy {
   @ViewChild('mapNode', { static: true }) private mapNode!: ElementRef<HTMLDivElement>;
+  private readonly title = inject(Title);
 
-  readonly selection = signal<FloodRecurrence[] | null>(null);
+  readonly selection = signal<FloodRecurrence[]>([]);
+  readonly locationStatus = signal<FloodLocationStatus | null>(null);
   readonly selectedProvince = signal<string | null>(null);
   readonly queryBusy = signal(false);
   readonly queryError = signal<string | null>(null);
@@ -36,9 +39,12 @@ export class FloodPage implements AfterViewInit, OnDestroy {
   private clickHandle: { remove(): void } | null = null;
   private disposed = false;
 
+  constructor() {
+    this.title.setTitle('Southern Thailand Flood Explorer');
+  }
+
   private readonly floodLayer = new MapImageLayer({
     url: FLOOD_SERVICE,
-    title: 'พื้นที่น้ำท่วมซ้ำซาก · GISTDA',
     sublayers: [{
       id: 0,
       visible: true,
@@ -58,7 +64,7 @@ export class FloodPage implements AfterViewInit, OnDestroy {
   private readonly provinceLayer = new FeatureLayer({
     url: PROVINCE_SERVICE,
     title: 'Thailand province boundaries',
-    outFields: ['NAME1', 'NAME_ENG1'],
+    outFields: ['NAME1', 'NAME_ENG1', 'ADMIN_ID1'],
     renderer: {
       type: 'simple',
       symbol: {
@@ -96,9 +102,9 @@ export class FloodPage implements AfterViewInit, OnDestroy {
     this.view = new MapView({
       container: this.mapNode.nativeElement,
       map,
-      center: [99.5, 8.4],
-      zoom: 6,
-      constraints: { minZoom: 5, maxZoom: 19, rotationEnabled: false },
+      center: [99.5, 8.1],
+      zoom: 7,
+      constraints: { minZoom: 6, maxZoom: 19, snapToZoom: false, rotationEnabled: false },
       background: { color: '#09090b' },
       ui: { components: ['attribution', 'zoom'] },
     });
@@ -129,7 +135,8 @@ export class FloodPage implements AfterViewInit, OnDestroy {
     if (!sublayer) return;
     this.queryBusy.set(true);
     this.queryError.set(null);
-    this.selection.set(null);
+    this.selection.set([]);
+    this.locationStatus.set(null);
     this.selectedProvince.set(null);
     try {
       const query = sublayer.createQuery();
@@ -141,10 +148,10 @@ export class FloodPage implements AfterViewInit, OnDestroy {
       const provinceQuery = this.provinceLayer.queryFeatures({
         geometry: point,
         spatialRelationship: 'intersects',
-        outFields: ['NAME1', 'NAME_ENG1'],
+        outFields: ['NAME1', 'NAME_ENG1', 'ADMIN_ID1'],
         returnGeometry: false,
         num: 1,
-      }).catch(() => null);
+      });
       const [floodResult, provinceResult] = await Promise.all([
         sublayer.queryFeatures(query),
         provinceQuery,
@@ -153,9 +160,14 @@ export class FloodPage implements AfterViewInit, OnDestroy {
       const features = floodResult.features.map((feature) => toFloodRecurrence(feature.attributes));
       this.selection.set(features);
       const province = provinceResult?.features[0]?.attributes;
-      this.selectedProvince.set(stringValue(province?.['NAME1']) ?? stringValue(province?.['NAME_ENG1']));
+      this.locationStatus.set(classifyFloodLocation(province ?? null, features));
+      this.selectedProvince.set(
+        features[0]?.provinceEnglish ?? stringValue(province?.['NAME_ENG1']) ?? stringValue(province?.['NAME1']),
+      );
     } catch {
-      if (!this.disposed) this.queryError.set('Could not check this location. The flood service may be temporarily unavailable.');
+      if (!this.disposed) {
+        this.queryError.set('Could not check this location because a map service is unavailable. Please try again later.');
+      }
     } finally {
       if (!this.disposed) this.queryBusy.set(false);
     }

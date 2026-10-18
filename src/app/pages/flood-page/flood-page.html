@@ -27,24 +27,21 @@
         <p class="state-message">Checking the selected location…</p>
       } @else if (queryError()) {
         <p class="state-message error">{{ queryError() }}</p>
-      } @else if (selection(); as records) {
-        @if (selectedProvince()) { <p class="province-name">{{ selectedProvince() }}</p> }
-        @if (records.length) {
+      } @else if (locationStatus() === 'flood') {
+        @if (selection().length > 1) { <p class="hint">{{ selection().length }} overlapping flood areas recorded at this point.</p> }
+        @for (record of selection(); track $index) {
           <p class="result-title">Inside a historical flood-prone area</p>
-          @for (record of records; track $index) {
-            <div class="recurrence">
-              <div><span>Recorded years</span><strong>{{ record.frequency ?? '—' }} of 10</strong></div>
-              <p>{{ formatYears(record.years) }}</p>
-              @if (record.provinceThai || record.provinceEnglish) {
-                <small>{{ record.provinceThai }}@if (record.provinceThai && record.provinceEnglish) { · }{{ record.provinceEnglish }}</small>
-              }
-            </div>
-          }
-          @if (records.length === 12) { <p class="hint">More overlapping features may exist at this location.</p> }
-        } @else {
-          <p class="result-title">Not in a mapped flood-prone area</p>
-          <p class="hint">No GISTDA flood polygon intersects this point.</p>
+          <div class="recurrence">
+            <div><span>Province</span><strong>{{ record.provinceEnglish ?? selectedProvince() ?? '—' }}</strong></div>
+            <div><span>Recorded flood frequency</span><strong>{{ record.frequency ?? '—' }} times</strong></div>
+            <p><span>Affected years</span><br>{{ formatYears(record.years) }}</p>
+          </div>
         }
+      } @else if (locationStatus() === 'covered-empty') {
+        @if (selectedProvince()) { <p class="province-name">{{ selectedProvince() }}</p> }
+        <p class="result-title">No flood-prone area recorded here in this dataset (2011–2020). This is not a guarantee of safety.</p>
+      } @else if (locationStatus() === 'outside') {
+        <p class="result-title">Outside the area this dataset covers (southern Thailand only). No information available.</p>
       } @else {
         <p class="state-message">Click anywhere on the map to check whether it falls inside a historical flood-prone area.</p>
       }
@@ -52,7 +49,7 @@
     </section>
 
     <footer class="credits">
-      <p>Historical data from 2554–2563 B.E. (2011–2020), covering Southern Thailand. This is not a live flood map. Follow official announcements for safety decisions.</p>
+      <p>Historical GISTDA data from 2011–2020 covers only the 12 southern provinces. Data density varies greatly by province; Krabi and Phang-nga have very few records. The dataset may be incomplete and is not a live flood map. Follow official announcements for safety decisions.</p>
       <p class="attribution">GISTDA · OpenStreetMap · Province boundaries: Globetech Co.,Ltd., MERKATOR Co.,Ltd.</p>
       <p class="license-note">GISTDA reuse terms were not specified in the service metadata; contact GISTDA before redistribution.</p>
     </footer>
