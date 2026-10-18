@@ -2,7 +2,9 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject, sig
 import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import Map from '@arcgis/core/Map.js';
+import Graphic from '@arcgis/core/Graphic.js';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer.js';
+import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer.js';
 import MapImageLayer from '@arcgis/core/layers/MapImageLayer.js';
 import MapView from '@arcgis/core/views/MapView.js';
 import Point from '@arcgis/core/geometry/Point.js';
@@ -61,9 +63,12 @@ export class FloodPage implements AfterViewInit, OnDestroy {
     }],
   });
 
+  private readonly clickMarkerLayer = new GraphicsLayer({ title: 'Selected map location' });
+
   private readonly provinceLayer = new FeatureLayer({
     url: PROVINCE_SERVICE,
     title: 'Thailand province boundaries',
+    visible: true,
     outFields: ['NAME1', 'NAME_ENG1', 'ADMIN_ID1'],
     renderer: {
       type: 'simple',
@@ -97,7 +102,7 @@ export class FloodPage implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     const map = new Map({
       basemap: 'dark-gray-vector',
-      layers: [this.floodLayer, this.provinceLayer, this.poiLayer],
+      layers: [this.floodLayer, this.provinceLayer, this.poiLayer, this.clickMarkerLayer],
     });
     this.view = new MapView({
       container: this.mapNode.nativeElement,
@@ -110,13 +115,26 @@ export class FloodPage implements AfterViewInit, OnDestroy {
     });
     this.view.when().then(() => {
       if (this.disposed || !this.view) return;
+      this.view.ui.move('zoom', 'bottom-right');
       const layer = this.floodLayer.findSublayerById(0);
       if (!layer) {
         this.serviceError.set('The GISTDA flood layer is unavailable right now. Please try again later.');
         return;
       }
       this.clickHandle = this.view.on('click', (event) => {
-        if (event.mapPoint) void this.inspectPoint(event.mapPoint);
+        if (!event.mapPoint) return;
+        this.clickMarkerLayer.removeAll();
+        this.clickMarkerLayer.add(new Graphic({
+          geometry: event.mapPoint,
+          symbol: {
+            type: 'simple-marker',
+            style: 'circle',
+            size: 12,
+            color: '#2dd4bf',
+            outline: { color: '#09090b', width: 2 },
+          },
+        }));
+        void this.inspectPoint(event.mapPoint);
       });
       void this.floodLayer.load().catch(() => this.serviceError.set('The GISTDA flood layer is unavailable right now. Please try again later.'));
       void this.provinceLayer.load().catch(() => undefined);

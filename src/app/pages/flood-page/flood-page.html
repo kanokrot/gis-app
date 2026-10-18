@@ -34,7 +34,7 @@
           <div class="recurrence">
             <div><span>Province</span><strong>{{ record.provinceEnglish ?? selectedProvince() ?? '—' }}</strong></div>
             <div><span>Recorded flood frequency</span><strong>{{ record.frequency ?? '—' }} times</strong></div>
-            <p><span>Affected years</span><br>{{ formatYears(record.years) }}</p>
+            <div class="year-row"><span>Affected years</span><strong class="year-values">{{ formatYears(record.years) }}</strong></div>
           </div>
         }
       } @else if (locationStatus() === 'covered-empty') {
