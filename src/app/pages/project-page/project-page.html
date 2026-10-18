@@ -85,6 +85,9 @@
                                     <li class="rounded-full border border-zinc-300 px-3 py-1 font-mono text-xs text-zinc-700 dark:border-zinc-700 dark:text-zinc-300">{{ tag }}</li>
                                 }
                             </ul>
+                            @if (project.demoRoute) {
+                                <a [routerLink]="project.demoRoute" class="mt-5 inline-flex font-semibold text-teal-700 underline decoration-teal-700/40 underline-offset-4 hover:text-teal-800 dark:text-teal-400 dark:decoration-teal-400/40 dark:hover:text-teal-300">Open the explorer →</a>
+                            }
                             @if (project.sourceUrl) {
                                 <a [href]="project.sourceUrl" target="_blank" rel="noopener noreferrer" class="mt-5 inline-flex font-semibold text-teal-700 underline decoration-teal-700/40 underline-offset-4 hover:text-teal-800 dark:text-teal-400 dark:decoration-teal-400/40 dark:hover:text-teal-300">Source on GitHub <span aria-hidden="true" class="ml-1">↗</span></a>
                             }

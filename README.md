@@ -10,7 +10,7 @@ A personal portfolio website built with Angular. Its **HouseBuy** page appears i
 - About, Articles, Projects, and Uses pages.
 - Uses page with a concise list of web development and mapping tools: Angular, TypeScript, Tailwind CSS, and ArcGIS Maps SDK.
 - HouseBuy GIS demo linked from the Projects page.
-- Southern Thailand Flood Explorer at `/flood`, available as a direct lazy-loaded route and not in the navigation pill.
+- Southern Thailand Flood Explorer at `/flood`, linked from the Projects page and available as a direct lazy-loaded route; it is not in the navigation pill.
 
 ### HouseBuy GIS demo
 

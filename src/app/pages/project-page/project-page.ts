@@ -31,6 +31,14 @@ const projectItems: ProjectItem[] = [
     sourceUrl: undefined,
   },
   {
+    id: 'flood-explorer',
+    title: 'Southern Thailand Flood Explorer',
+    description: 'Historical flood-prone areas from GISTDA for 12 southern provinces, colored by how many times each area flooded between 2011 and 2020. Click the map to check a location. Not a live flood map.',
+    tags: ['Angular', 'ArcGIS', 'GISTDA', 'Tailwind'],
+    demoRoute: '/flood',
+    sourceUrl: undefined,
+  },
+  {
     id: 'portfolio',
     title: 'This portfolio',
     description: 'The site you’re on: Angular, Tailwind and PrimeNG, with write-ups synced from Medium by RSS.',
