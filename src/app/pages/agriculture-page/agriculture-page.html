@@ -1,7 +1,10 @@
 <main class="agriculture-shell">
-  <div #mapNode class="map" aria-label="Thailand province map for rice, sugarcane and overall machinery data"></div>
+  <div #mapNode class="map" aria-label="Interactive map of Thai provincial agriculture data"></div>
+  @if (tooltip(); as tip) {
+    <div class="map-tooltip" role="status" aria-live="polite" [style.left.px]="tip.x" [style.top.px]="tip.y">{{ tip.text }}</div>
+  }
 
-  <aside class="panel glass" aria-label="Agriculture comparison controls">
+  <aside #panelNode class="panel glass" aria-label="Agriculture comparison controls">
     <header class="brand-row">
       <a class="home-mark" routerLink="/" aria-label="Back to home">K</a>
       <span class="eyebrow">GIS EXPLORER · PROVINCE DATA</span>
@@ -13,7 +16,7 @@
       <p class="subhead">Compare wet-season rice area and forecast sugarcane planted area for 2565/66 with the provincial share of holders reporting any machinery use.</p>
     </section>
 
-    <section class="control-card" aria-label="Map metric">
+    <section class="control-card" aria-label="Map metric and legend">
       <label for="metricSelect">Map layer</label>
       <select id="metricSelect" [value]="metric()" (change)="selectMetric($event)">
         @for (item of metrics; track item.id) {
@@ -22,38 +25,77 @@
       </select>
       <p class="metric-description">{{ activeMetric().description }}</p>
       <p class="metric-year">{{ activeMetric().sourceYear }}</p>
-      <div class="legend-list" aria-label="Map legend">
-        @for (item of legend(); track $index) {
-          <div class="legend-row"><span class="legend-chip" [style.backgroundColor]="item.color"></span><span>{{ item.label }}</span></div>
-        }
-        <div class="legend-row"><span class="legend-chip no-record"></span><span>No record in supplied file</span></div>
-      </div>
+
+      @if (metric() !== 'machineryShare') {
+        <div class="mode-toggle" role="group" aria-label="Map rendering mode">
+          <button type="button" [attr.aria-pressed]="displayMode() === 'colors'" (click)="setDisplayMode('colors')">Colors</button>
+          <button type="button" [attr.aria-pressed]="displayMode() === 'dots'" (click)="setDisplayMode('dots')">Dots</button>
+        </div>
+      } @else {
+        <p class="mode-note">Machinery use is a share, so it is shown with colors.</p>
+      }
+
+      @if (displayMode() === 'dots' && metric() !== 'machineryShare') {
+        <div class="dot-legend">
+          <strong>{{ dotValueLabel() }}</strong>
+          <p>Dots are placed randomly within each province; they do not mark real field locations.</p>
+        </div>
+      } @else {
+        <div class="legend-list" aria-label="Map legend">
+          @for (item of legend(); track $index) {
+            <div class="legend-row"><span class="legend-chip" [style.backgroundColor]="item.color"></span><span>{{ item.label }}</span></div>
+          }
+          <div class="legend-row"><span class="legend-chip no-record"></span><span>No record in supplied file</span></div>
+        </div>
+      }
     </section>
 
-    <section class="selection-card" aria-live="polite" aria-label="Selected province">
+    <section class="selection-card" aria-live="polite" aria-label="Selected province details">
       <p class="mono-label">PROVINCE CHECK</p>
       @if (loadState() === 'loading') {
         <p class="state-message">Loading province boundaries…</p>
       } @else if (loadState() === 'error') {
         <p class="state-message error">The province map service is unavailable. Please try again later.</p>
       } @else if (selectedRecord(); as record) {
-        <h2>{{ selectedProvince() }}</h2>
-        @switch (metric()) {
-          @case ('riceArea') {
-            <div class="stat-row"><span>Rice planted area · 2565/66</span><strong>{{ formatSelectedValue(record) }}</strong></div>
-          }
-          @case ('caneArea') {
-            <div class="stat-row"><span>Forecast planted area (CaneArea) · 2565/66</span><strong>{{ formatSelectedValue(record) }}</strong></div>
-            <p class="small-note">Unit is not confirmed in the supplied dictionary. Missing provinces have no row in the file; they are not zero.</p>
-          }
-          @case ('machineryShare') {
-            <div class="stat-row"><span>Share of holders reporting any machinery use</span><strong>{{ formatSelectedValue(record) }}</strong></div>
-            <div class="stat-row"><span>Using / reported</span><strong>{{ formatValue(record.machineryUsed) }} / {{ formatValue(record.machineryReported) }} holders</strong></div>
-            <p class="small-note">Year is not stated in the supplied file (the NSO catalog identifies 2566). This is a provincial aggregate, not household-level detail; no machine type is specified.</p>
-          }
-        }
+        <h2>{{ record.province }}</h2>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span>Rice planted area · 2565/66</span>
+            <strong>{{ formatRecordValue(record, 'riceArea') }}</strong>
+          </div>
+          <div class="detail-item">
+            <span>Forecast planted area (CaneArea) · 2565/66 · unit unconfirmed</span>
+            <strong>{{ formatRecordValue(record, 'caneArea') }}</strong>
+          </div>
+          <div class="detail-item">
+            <span>Share of holders reporting any machinery use · year not stated in file (catalog: 2566)</span>
+            <strong>{{ formatRecordValue(record, 'machineryShare') }}</strong>
+          </div>
+        </div>
+        <p class="rank-note">{{ activeMetric().label }} rank: <strong>{{ rankForSelected() }}</strong></p>
       } @else {
-        <p class="state-message">Click a province to inspect its available value.</p>
+        <p class="state-message">Hover over a province for a quick value. Click to compare all three measures.</p>
+      }
+    </section>
+
+    <section class="top-card" aria-label="Top ten provinces by selected measure">
+      <div class="top-heading">
+        <div><p class="mono-label">RANKED PROVINCES</p><h2>Top 10</h2></div>
+        <span>{{ activeMetric().label }}</span>
+      </div>
+      @if (loadState() === 'ready') {
+        <ol class="top-list">
+          @for (item of topTen(); track item.province) {
+            <li>
+              <button type="button" class="top-button" (click)="selectTopProvince(item.province)"
+                [attr.aria-label]="'Rank ' + item.rank + ' of ' + rankCount() + ', ' + item.province + ', ' + item.formattedValue + '. Zoom to province and show details.'">
+                <span class="top-number">{{ item.rank }}</span>
+                <span class="top-main"><span class="top-label">{{ item.province }}</span><span class="top-track"><span class="top-bar" [style.width.%]="item.barWidth" [style.backgroundColor]="activeMetric().colors[3]"></span></span></span>
+                <strong class="top-value">{{ item.formattedValue }}</strong>
+              </button>
+            </li>
+          }
+        </ol>
       }
     </section>
 

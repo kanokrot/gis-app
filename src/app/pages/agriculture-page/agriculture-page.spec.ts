@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { calculateShare, colorBandIndex } from './agriculture-utils';
+import {
+  calculateShare,
+  chooseDotValue,
+  colorBandIndex,
+  dotCount,
+  formatAgricultureValue,
+  formatRank,
+  formatTooltipText,
+  rankItems,
+  topItems,
+} from './agriculture-utils';
 
 describe('agriculture page data utilities', () => {
   it('calculates a reported machinery-use share', () => {
@@ -20,5 +30,31 @@ describe('agriculture page data utilities', () => {
     expect(colorBandIndex(50, bounds)).toBe(2);
     expect(colorBandIndex(75, bounds)).toBe(2);
     expect(colorBandIndex(null, bounds)).toBe(-1);
+  });
+
+  it('ranks only provinces with recorded values and returns the top ten', () => {
+    const ranked = rankItems([
+      { province: 'A', value: 10 },
+      { province: 'B', value: null },
+      { province: 'C', value: 30 },
+    ], (item) => item.value);
+    expect(ranked.map(({ item, rank }) => [item.province, rank])).toEqual([['C', 1], ['A', 2]]);
+    expect(topItems(ranked, 1)).toEqual([ranked[0]]);
+  });
+
+  it('chooses a dot value that stays within per-province and national caps', () => {
+    const values = [1_000_000, 10_000, null, 500_000];
+    const value = chooseDotValue(values)!;
+    expect(value).toBe(2500);
+    expect(dotCount(1_000_000, value)).toBeLessThanOrEqual(400);
+    expect(values.reduce<number>((sum, item) => sum + dotCount(item, value), 0)).toBeLessThanOrEqual(8000);
+  });
+
+  it('formats tooltip and detail values without turning missing data into zero', () => {
+    expect(formatAgricultureValue(null, 'rai')).toBe('No record in supplied file');
+    expect(formatTooltipText('Chiang Mai', null, 'rai')).toBe('Chiang Mai · No record in supplied file');
+    expect(formatTooltipText('Chiang Mai', 25, '%', 'share')).toBe('Chiang Mai · 25%');
+    expect(formatRank(null, 0)).toBe('No rank');
+    expect(formatRank(12, 77)).toBe('12 of 77');
   });
 });
