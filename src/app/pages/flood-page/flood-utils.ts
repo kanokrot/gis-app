@@ -66,6 +66,11 @@ export function shouldShowFloodLoading(
   return isUpdating && visibleAtCurrentScale && currentScale > 0 && currentScale <= minimumVisibleScale;
 }
 
+export function formatFloodFrequency(frequency: number | null): string {
+  if (frequency === null) return '—';
+  return `${frequency} ${frequency === 1 ? 'time' : 'times'}`;
+}
+
 export interface FloodRecurrence {
   frequency: number | null;
   years: number[];

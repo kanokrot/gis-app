@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildFloodYearStrip, classifyFloodLocation, floodRecurrenceColor, floodRecurrenceLabel, shouldShowFloodLoading, toFloodRecurrence } from './flood-utils';
+import { buildFloodYearStrip, classifyFloodLocation, floodRecurrenceColor, floodRecurrenceLabel, formatFloodFrequency, shouldShowFloodLoading, toFloodRecurrence } from './flood-utils';
 
 describe('toFloodRecurrence', () => {
   it('converts observed binary year fields and preserves province labels', () => {
@@ -91,5 +91,16 @@ describe('shouldShowFloodLoading', () => {
     expect(shouldShowFloodLoading(true, false, 1_000_000, 5_500_000)).toBe(false);
     expect(shouldShowFloodLoading(true, true, 8_000_000, 5_500_000)).toBe(false);
     expect(shouldShowFloodLoading(true, true, 5_500_000, 5_500_000)).toBe(true);
+  });
+});
+
+describe('formatFloodFrequency', () => {
+  it('uses singular for one and plural for multiple times', () => {
+    expect(formatFloodFrequency(1)).toBe('1 time');
+    expect(formatFloodFrequency(2)).toBe('2 times');
+  });
+
+  it('shows a dash when frequency is missing', () => {
+    expect(formatFloodFrequency(null)).toBe('—');
   });
 });

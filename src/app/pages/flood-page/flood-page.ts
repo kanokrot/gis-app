@@ -11,7 +11,7 @@ import MapView from '@arcgis/core/views/MapView.js';
 import Point from '@arcgis/core/geometry/Point.js';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils.js';
 import * as geometryEngine from '@arcgis/core/geometry/geometryEngine.js';
-import { buildFloodYearStrip, classifyFloodLocation, FLOOD_RECURRENCE_LEGEND, floodRecurrenceColor, shouldShowFloodLoading, toFloodRecurrence, type FloodLocationStatus, type FloodRecurrence } from './flood-utils';
+import { buildFloodYearStrip, classifyFloodLocation, FLOOD_RECURRENCE_LEGEND, floodRecurrenceColor, formatFloodFrequency, shouldShowFloodLoading, toFloodRecurrence, type FloodLocationStatus, type FloodRecurrence } from './flood-utils';
 
 const FLOOD_SERVICE = 'https://gistdaportal.gistda.or.th/data/rest/services/FL_Flood/flood_freq11_20/MapServer';
 const PROVINCE_SERVICE = 'https://services1.arcgis.com/jSaRWj2TDlcN1zOC/ArcGIS/rest/services/Thailand_Province_Boundaries_view/FeatureServer/1';
@@ -283,6 +283,10 @@ export class FloodPage implements AfterViewInit, OnDestroy {
 
   formatYears(years: number[]): string {
     return years.length ? years.join(', ') : 'No year values returned';
+  }
+
+  formatFrequency(frequency: number | null): string {
+    return formatFloodFrequency(frequency);
   }
 
   yearStrip(years: readonly number[]): { year: number; affected: boolean }[] {
