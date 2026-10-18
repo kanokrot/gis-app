@@ -39,11 +39,11 @@ const projectItems: ProjectItem[] = [
     sourceUrl: undefined,
   },
   {
-    id: 'portfolio',
-    title: 'This portfolio',
-    description: 'The site you’re on: Angular, Tailwind and PrimeNG, with write-ups synced from Medium by RSS.',
-    tags: ['Angular', 'Tailwind', 'PrimeNG', 'RSS'],
-    sourceUrl: undefined,
+    id: 'agriculture-explorer',
+    title: 'Rice, sugarcane & machinery use by province',
+    description: 'A provincial map comparing wet-season rice area, forecast sugarcane planted area and reported machinery use, with hover details, rankings and dot-density mode.',
+    tags: ['Angular', 'ArcGIS', 'OAE', 'NSO', 'Tailwind'],
+    demoRoute: '/agriculture',
   },
 ];
 

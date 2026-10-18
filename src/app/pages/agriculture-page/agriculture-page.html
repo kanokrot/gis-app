@@ -88,9 +88,9 @@
           @for (item of topTen(); track item.province) {
             <li>
               <button type="button" class="top-button" (click)="selectTopProvince(item.province)"
-                [attr.aria-label]="'Rank ' + item.rank + ' of ' + rankCount() + ', ' + item.province + ', ' + item.formattedValue + '. Zoom to province and show details.'">
+                [attr.aria-label]="'Rank ' + item.rank + ' of ' + rankCount() + ', ' + item.bilingualName + ', ' + item.formattedValue + '. Zoom to province and show details.'">
                 <span class="top-number">{{ item.rank }}</span>
-                <span class="top-main"><span class="top-label">{{ item.province }}</span><span class="top-track"><span class="top-bar" [style.width.%]="item.barWidth" [style.backgroundColor]="activeMetric().colors[3]"></span></span></span>
+                <span class="top-main"><span class="top-label">{{ item.bilingualName }}</span><span class="top-track"><span class="top-bar" [style.width.%]="item.barWidth" [style.backgroundColor]="activeMetric().colors[3]"></span></span></span>
                 <strong class="top-value">{{ item.formattedValue }}</strong>
               </button>
             </li>

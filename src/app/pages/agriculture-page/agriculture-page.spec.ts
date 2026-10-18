@@ -5,6 +5,7 @@ import {
   colorBandIndex,
   dotCount,
   formatAgricultureValue,
+  formatBilingualProvinceName,
   formatRank,
   formatTooltipText,
   rankItems,
@@ -56,5 +57,10 @@ describe('agriculture page data utilities', () => {
     expect(formatTooltipText('Chiang Mai', 25, '%', 'share')).toBe('Chiang Mai · 25%');
     expect(formatRank(null, 0)).toBe('No rank');
     expect(formatRank(12, 77)).toBe('12 of 77');
+  });
+
+  it('shows Thai and English province names in ranked labels', () => {
+    expect(formatBilingualProvinceName('เชียงใหม่')).toBe('เชียงใหม่ / Chiang Mai');
+    expect(formatBilingualProvinceName('Unknown')).toBe('Unknown');
   });
 });

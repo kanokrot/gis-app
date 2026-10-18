@@ -13,6 +13,7 @@ import {
   chooseDotValue,
   dotCount,
   formatAgricultureValue,
+  formatBilingualProvinceName,
   formatRank,
   formatTooltipText,
   rankItems,
@@ -39,6 +40,7 @@ interface LegendItem {
 
 interface TopProvince {
   province: string;
+  bilingualName: string;
   value: number;
   rank: number;
   barWidth: number;
@@ -207,6 +209,7 @@ export class AgriculturePage implements AfterViewInit, OnDestroy {
     const max = entries[0]?.value ?? 1;
     return entries.map(({ item, value, rank }) => ({
       province: item.province,
+      bilingualName: formatBilingualProvinceName(item.province),
       value,
       rank,
       barWidth: Math.max(2, (value / max) * 100),

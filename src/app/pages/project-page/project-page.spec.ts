@@ -23,17 +23,18 @@ describe('ProjectPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('renders the featured demo and portfolio card without placeholder or source links', () => {
+  it('renders the featured demo and two project cards without placeholder or source links', () => {
     const text = fixture.nativeElement.textContent;
     const cards = fixture.nativeElement.querySelectorAll('main article');
     expect(text).toContain('Projects & experiments.');
     expect(text).toContain('HouseBuy GIS demo');
     expect(text).toContain('Southern Thailand Flood Explorer');
-    expect(text).toContain('This portfolio');
+    expect(text).toContain('Rice, sugarcane & machinery use by province');
     expect(text).toContain('Rotatable 2D map with compass, scale bar and coordinate readout');
     expect(cards.length).toBe(3);
     expect(fixture.nativeElement.querySelector('a[href="/demo-gis"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('a[href="/flood"]')?.textContent).toContain('Open the explorer →');
+    expect(fixture.nativeElement.querySelector('a[href="/agriculture"]')?.textContent).toContain('Open the explorer →');
     expect(fixture.nativeElement.querySelector('main a[href^="https://github.com/"]')).toBeNull();
   });
 });
