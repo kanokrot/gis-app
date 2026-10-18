@@ -47,6 +47,15 @@ interface TopProvince {
   formattedValue: string;
 }
 
+interface ScatterPoint {
+  province: string;
+  bilingualName: string;
+  riceArea: number;
+  machineryShare: number;
+  x: number;
+  y: number;
+}
+
 interface TooltipState {
   text: string;
   x: number;
@@ -113,6 +122,7 @@ export class AgriculturePage implements AfterViewInit, OnDestroy {
   readonly displayMode = signal<DisplayMode>('colors');
   readonly loadState = signal<'loading' | 'ready' | 'error'>('loading');
   readonly selectedProvince = signal<string | null>(null);
+  readonly hoveredProvince = signal<string | null>(null);
   readonly selectedRecord = signal<ProvinceRecord | null>(null);
   readonly tooltip = signal<TooltipState | null>(null);
   readonly metrics = METRICS;
@@ -215,6 +225,58 @@ export class AgriculturePage implements AfterViewInit, OnDestroy {
       barWidth: Math.max(2, (value / max) * 100),
       formattedValue: formatAgricultureValue(value, this.unitFor(this.metric()), this.metric() === 'machineryShare' ? 'share' : 'area'),
     }));
+  }
+
+  scatterMaxRice(): number {
+    const max = Math.max(...PROVINCES.map((record) => record.riceArea ?? 0), 0);
+    return Math.max(500_000, Math.ceil(max / 500_000) * 500_000);
+  }
+
+  scatterPoints(): ScatterPoint[] {
+    const maxRice = this.scatterMaxRice();
+    return PROVINCES.flatMap((record) => {
+      const riceArea = record.riceArea;
+      const machineryShare = calculateShare(record.machineryUsed, record.machineryReported);
+      if (riceArea === null || !Number.isFinite(riceArea) || machineryShare === null) return [];
+      return [{
+        province: record.province,
+        bilingualName: formatBilingualProvinceName(record.province),
+        riceArea,
+        machineryShare,
+        x: 48 + (riceArea / maxRice) * 272,
+        y: 190 - (machineryShare / 100) * 170,
+      }];
+    });
+  }
+
+  formatCompactNumber(value: number): string {
+    if (value >= 1_000_000) return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value / 1_000_000)}M`;
+    if (value >= 1_000) return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value / 1_000)}k`;
+    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value);
+  }
+
+  setProvinceHover(province: string): void {
+    this.hoveredProvince.set(province);
+    void this.updateHighlight(province);
+  }
+
+  clearProvinceHover(province: string): void {
+    if (this.hoveredProvince() !== province) return;
+    this.hoveredProvince.set(null);
+    this.restoreProvinceHighlight();
+  }
+
+  clearMapHover(): void {
+    this.tooltip.set(null);
+    this.mapNode.nativeElement.style.cursor = 'default';
+    const province = this.hoveredProvince();
+    if (province) this.clearProvinceHover(province);
+  }
+
+  activateScatterPoint(event: KeyboardEvent, province: string): void {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    this.selectTopProvince(province);
   }
 
   rankCount(): number {
@@ -398,9 +460,9 @@ export class AgriculturePage implements AfterViewInit, OnDestroy {
       const record = typeof name === 'string' ? PROVINCES.find((item) => item.province === name) : null;
       if (!graphic || !record) {
         this.tooltip.set(null);
+        const hovered = this.hoveredProvince();
+        if (hovered) this.clearProvinceHover(hovered);
         this.mapNode.nativeElement.style.cursor = 'default';
-        this.highlightHandle?.remove();
-        this.highlightHandle = null;
         return;
       }
       const metric = this.metric();
@@ -409,11 +471,26 @@ export class AgriculturePage implements AfterViewInit, OnDestroy {
         x: Math.min(x + 14, Math.max(8, this.mapNode.nativeElement.clientWidth - 280)),
         y: Math.max(8, y - 42),
       });
+      this.hoveredProvince.set(record.province);
       this.mapNode.nativeElement.style.cursor = 'pointer';
       await this.updateHighlight(record.province);
     } catch {
-      if (sequence === this.hoverSequence) this.tooltip.set(null);
+      if (sequence === this.hoverSequence) {
+        this.tooltip.set(null);
+        const hovered = this.hoveredProvince();
+        if (hovered) this.clearProvinceHover(hovered);
+      }
     }
+  }
+
+  private restoreProvinceHighlight(): void {
+    const selected = this.selectedProvince();
+    if (selected) {
+      void this.updateHighlight(selected);
+      return;
+    }
+    this.highlightHandle?.remove();
+    this.highlightHandle = null;
   }
 
   private async updateHighlight(province: string): Promise<void> {
