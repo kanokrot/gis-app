@@ -1,0 +1,60 @@
+<main class="flood-shell">
+  <div #mapNode class="map" aria-label="Map of historical flood-prone areas in Southern Thailand"></div>
+
+  <aside class="panel glass" aria-label="Flood explorer information">
+    <header class="brand-row">
+      <a class="home-mark" routerLink="/" aria-label="Back to home">K</a>
+      <span class="eyebrow">GIS EXPLORER · GISTDA</span>
+    </header>
+
+    <section class="intro">
+      <p class="mono-label">$ open southern-thailand-floods</p>
+      <h1>Southern Thailand Flood Explorer</h1>
+      <p class="subhead">Explore areas with recurring historical floods across 12 southern provinces.</p>
+    </section>
+
+    <section class="legend-card" aria-label="Map layers">
+      <h2>Map layers</h2>
+      <div class="layer-key"><span class="swatch flood-swatch"></span><span>Historical flood-prone areas</span></div>
+      <div class="layer-key"><span class="swatch province-swatch"></span><span>Province boundaries</span></div>
+      <div class="layer-key"><span class="swatch poi-swatch"></span><span>OpenStreetMap places · zoom in</span></div>
+      <p class="hint">Flood areas appear when zoomed in. Click the map to inspect a location.</p>
+    </section>
+
+    <section class="selection-card" aria-live="polite" aria-label="Location details">
+      <p class="mono-label">LOCATION CHECK</p>
+      @if (queryBusy()) {
+        <p class="state-message">Checking the selected location…</p>
+      } @else if (queryError()) {
+        <p class="state-message error">{{ queryError() }}</p>
+      } @else if (selection(); as records) {
+        @if (selectedProvince()) { <p class="province-name">{{ selectedProvince() }}</p> }
+        @if (records.length) {
+          <p class="result-title">Inside a historical flood-prone area</p>
+          @for (record of records; track $index) {
+            <div class="recurrence">
+              <div><span>Recorded years</span><strong>{{ record.frequency ?? '—' }} of 10</strong></div>
+              <p>{{ formatYears(record.years) }}</p>
+              @if (record.provinceThai || record.provinceEnglish) {
+                <small>{{ record.provinceThai }}@if (record.provinceThai && record.provinceEnglish) { · }{{ record.provinceEnglish }}</small>
+              }
+            </div>
+          }
+          @if (records.length === 12) { <p class="hint">More overlapping features may exist at this location.</p> }
+        } @else {
+          <p class="result-title">Not in a mapped flood-prone area</p>
+          <p class="hint">No GISTDA flood polygon intersects this point.</p>
+        }
+      } @else {
+        <p class="state-message">Click anywhere on the map to check whether it falls inside a historical flood-prone area.</p>
+      }
+      @if (serviceError()) { <p class="state-message error">{{ serviceError() }}</p> }
+    </section>
+
+    <footer class="credits">
+      <p>Historical data from 2554–2563 B.E. (2011–2020), covering Southern Thailand. This is not a live flood map. Follow official announcements for safety decisions.</p>
+      <p class="attribution">GISTDA · OpenStreetMap · Province boundaries: Globetech Co.,Ltd., MERKATOR Co.,Ltd.</p>
+      <p class="license-note">GISTDA reuse terms were not specified in the service metadata; contact GISTDA before redistribution.</p>
+    </footer>
+  </aside>
+</main>

@@ -25,6 +25,10 @@ export const routes: Routes = [    {
         loadComponent: () => import('./pages/demo-gis-page/demo-gis-page').then(m => m.DemoGisPage)
     },
     {
+        path: 'flood',
+        loadComponent: () => import('./pages/flood-page/flood-page').then(m => m.FloodPage)
+    },
+    {
         path: '**',
         loadComponent: () => import('./pages/not-found-page/not-found-page').then(m => m.NotFoundPage)
     },
