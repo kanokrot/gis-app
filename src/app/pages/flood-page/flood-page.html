@@ -65,16 +65,13 @@
             <div><span>Recorded flood frequency</span><strong>{{ formatFrequency(record.frequency) }}</strong></div>
             <div class="year-row">
               <span>Affected years</span>
-              <div class="mt-2 overflow-x-auto">
-                <div class="grid grid-cols-5 gap-1" role="group" aria-label="Affected years, 2011 to 2020">
-                  @for (entry of yearStrip(record.years); track entry.year) {
-                    <span class="flex flex-col items-center rounded border px-1 py-1 text-[10px] leading-tight"
-                      [class.border-amber-300]="entry.affected" [class.bg-amber-500/30]="entry.affected" [class.text-amber-100]="entry.affected"
-                      [class.border-zinc-700]="!entry.affected" [class.bg-zinc-900]="!entry.affected" [class.text-zinc-300]="!entry.affected">
-                      <span>{{ entry.year }}</span><strong>{{ entry.affected ? 'Flood' : 'None' }}</strong>
-                    </span>
-                  }
-                </div>
+              <div class="year-strip" role="group" aria-label="Affected years, 2011 to 2020">
+                @for (entry of yearStrip(record.years); track entry.year) {
+                  <span class="flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-md border border-zinc-700 bg-zinc-900 px-0.5 py-1 text-center text-[10px] leading-tight text-zinc-300"
+                    [class.border-amber-300]="entry.affected" [class.bg-amber-500/30]="entry.affected" [class.text-amber-100]="entry.affected">
+                    <span>{{ entry.year }}</span><strong>{{ entry.affected ? 'Flood' : 'None' }}</strong>
+                  </span>
+                }
               </div>
               <span class="sr-only">Affected years: {{ formatYears(record.years) }}</span>
             </div>
