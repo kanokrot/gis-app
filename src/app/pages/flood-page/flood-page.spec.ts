@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { classifyFloodLocation, toFloodRecurrence } from './flood-utils';
+import { classifyFloodLocation, floodRecurrenceColor, floodRecurrenceLabel, toFloodRecurrence } from './flood-utils';
 
 describe('toFloodRecurrence', () => {
   it('converts observed binary year fields and preserves province labels', () => {
@@ -49,5 +49,23 @@ describe('classifyFloodLocation', () => {
 
   it('reports outside for a province not in the dataset coverage', () => {
     expect(classifyFloodLocation({ NAME_ENG1: 'BANGKOK', ADMIN_ID1: '10' }, [])).toBe('outside');
+  });
+});
+
+describe('flood recurrence legend', () => {
+  it('matches recurrence values 1–9 to the map ramp and numeric legend labels', () => {
+    expect(Array.from({ length: 9 }, (_, index) => index + 1).map((frequency) => [
+      floodRecurrenceColor(frequency),
+      floodRecurrenceLabel(frequency),
+    ])).toEqual([
+      ['#2563eb', '1'], ['#0ea5e9', '2'], ['#14b8a6', '3'],
+      ['#22c55e', '4'], ['#84cc16', '5'], ['#eab308', '6'],
+      ['#f97316', '7'], ['#ef4444', '8'], ['#b91c1c', '9'],
+    ]);
+  });
+
+  it('returns no color or label for unsupported recurrence values', () => {
+    expect(floodRecurrenceColor(0)).toBeNull();
+    expect(floodRecurrenceLabel(10)).toBeNull();
   });
 });

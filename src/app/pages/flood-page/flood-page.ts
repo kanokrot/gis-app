@@ -6,14 +6,17 @@ import Graphic from '@arcgis/core/Graphic.js';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer.js';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer.js';
 import MapImageLayer from '@arcgis/core/layers/MapImageLayer.js';
+import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter.js';
 import MapView from '@arcgis/core/views/MapView.js';
 import Point from '@arcgis/core/geometry/Point.js';
-import { classifyFloodLocation, toFloodRecurrence, type FloodLocationStatus, type FloodRecurrence } from './flood-utils';
+import * as geometryEngine from '@arcgis/core/geometry/geometryEngine.js';
+import { classifyFloodLocation, FLOOD_RECURRENCE_LEGEND, floodRecurrenceColor, toFloodRecurrence, type FloodLocationStatus, type FloodRecurrence } from './flood-utils';
 
 const FLOOD_SERVICE = 'https://gistdaportal.gistda.or.th/data/rest/services/FL_Flood/flood_freq11_20/MapServer';
 const PROVINCE_SERVICE = 'https://services1.arcgis.com/jSaRWj2TDlcN1zOC/ArcGIS/rest/services/Thailand_Province_Boundaries_view/FeatureServer/1';
 const POI_SERVICE = 'https://services-ap1.arcgis.com/iA7fZQOnjY9D67Zx/ArcGIS/rest/services/OSM_AS_POIs/FeatureServer/0';
 const FLOOD_QUERY_FIELDS = ['Freq', 'Y_2011', 'Y_2012', 'Y_2013', 'Y_2014', 'Y_2015', 'Y_2016', 'Y2017', 'Y_2018', 'Y_2019', 'Y_2020', 'PV_TN', 'PV_EN'];
+const SOUTHERN_PROVINCE_CODES = ['80', '90', '93', '84', '96', '94', '95', '92', '86', '91', '82', '81'];
 
 function stringValue(value: unknown): string | null {
   return typeof value === 'string' && value.trim() ? value.trim() : null;
@@ -36,6 +39,8 @@ export class FloodPage implements AfterViewInit, OnDestroy {
   readonly queryBusy = signal(false);
   readonly queryError = signal<string | null>(null);
   readonly serviceError = signal<string | null>(null);
+  readonly poiFilterActive = signal(false);
+  readonly floodLegend = FLOOD_RECURRENCE_LEGEND;
 
   private view: MapView | null = null;
   private clickHandle: { remove(): void } | null = null;
@@ -50,15 +55,22 @@ export class FloodPage implements AfterViewInit, OnDestroy {
     sublayers: [{
       id: 0,
       visible: true,
-      opacity: 0.62,
+      opacity: 0.78,
       minScale: 5_500_000,
       renderer: {
-        type: 'simple',
-        symbol: {
-          type: 'simple-fill',
-          color: [255, 138, 61, 0.42],
-          outline: { color: [255, 177, 112, 0.78], width: 0.55 },
-        },
+        type: 'class-breaks',
+        field: 'Freq',
+        minValue: 0.5,
+        classBreakInfos: FLOOD_RECURRENCE_LEGEND.map((entry, index) => ({
+          minValue: entry.frequency - 0.5,
+          maxValue: entry.frequency + 0.5,
+          label: String(entry.frequency),
+          symbol: {
+            type: 'simple-fill',
+            color: [...hexToRgb(floodRecurrenceColor(entry.frequency)!), 0.72],
+            outline: { color: [244, 244, 245, 0.3], width: 0.35 },
+          },
+        })),
       } as any,
     }],
   });
@@ -84,16 +96,16 @@ export class FloodPage implements AfterViewInit, OnDestroy {
   private readonly poiLayer = new FeatureLayer({
     url: POI_SERVICE,
     title: 'OpenStreetMap points of interest',
-    outFields: ['*'],
-    minScale: 0,
-    maxScale: 1_200_000,
+    outFields: ['objectid', 'name', 'name_en', 'amenity', 'healthcare', 'tourism', 'shop'],
+    minScale: 1_200_000,
+    maxScale: 0,
     renderer: {
       type: 'simple',
       symbol: {
         type: 'simple-marker',
-        size: 5,
-        color: [45, 212, 191, 0.88],
-        outline: { color: [8, 20, 24, 0.8], width: 0.6 },
+        size: 3,
+        color: [228, 228, 231, 0.5],
+        outline: { color: [24, 24, 27, 0.72], width: 0.45 },
       },
     } as any,
     popupEnabled: false,
@@ -138,6 +150,7 @@ export class FloodPage implements AfterViewInit, OnDestroy {
       });
       void this.floodLayer.load().catch(() => this.serviceError.set('The GISTDA flood layer is unavailable right now. Please try again later.'));
       void this.provinceLayer.load().catch(() => undefined);
+      void this.filterPoisToSouthernThailand();
     }).catch(() => this.serviceError.set('The map could not be opened. Please refresh and try again.'));
   }
 
@@ -191,7 +204,33 @@ export class FloodPage implements AfterViewInit, OnDestroy {
     }
   }
 
+  private async filterPoisToSouthernThailand(): Promise<void> {
+    try {
+      const [provinceResult, poiLayerView] = await Promise.all([
+        this.provinceLayer.queryFeatures({
+          where: `ADMIN_ID1 IN (${SOUTHERN_PROVINCE_CODES.map((code) => `'${code}'`).join(',')})`,
+          outFields: ['ADMIN_ID1'],
+          returnGeometry: true,
+        }),
+        this.view!.whenLayerView(this.poiLayer),
+      ]);
+      const geometries = provinceResult.features.flatMap((feature) => feature.geometry ? [feature.geometry] : []);
+      if (this.disposed || geometries.length !== SOUTHERN_PROVINCE_CODES.length) return;
+      const southernGeometry = geometryEngine.union(geometries);
+      if (!southernGeometry) return;
+      poiLayerView.filter = new FeatureFilter({ geometry: southernGeometry, spatialRelationship: 'intersects' });
+      this.poiFilterActive.set(true);
+    } catch {
+      if (!this.disposed) this.poiFilterActive.set(false);
+    }
+  }
+
   formatYears(years: number[]): string {
     return years.length ? years.join(', ') : 'No year values returned';
   }
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  const value = Number.parseInt(hex.slice(1), 16);
+  return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
 }

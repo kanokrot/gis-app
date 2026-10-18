@@ -30,6 +30,26 @@ const PROVINCE_CODES: Record<(typeof SOUTHERN_PROVINCES)[number], string> = {
   Krabi: '81',
 };
 
+export const FLOOD_RECURRENCE_LEGEND = [
+  { frequency: 1, color: '#2563eb' },
+  { frequency: 2, color: '#0ea5e9' },
+  { frequency: 3, color: '#14b8a6' },
+  { frequency: 4, color: '#22c55e' },
+  { frequency: 5, color: '#84cc16' },
+  { frequency: 6, color: '#eab308' },
+  { frequency: 7, color: '#f97316' },
+  { frequency: 8, color: '#ef4444' },
+  { frequency: 9, color: '#b91c1c' },
+] as const;
+
+export function floodRecurrenceColor(frequency: number): string | null {
+  return FLOOD_RECURRENCE_LEGEND.find((entry) => entry.frequency === frequency)?.color ?? null;
+}
+
+export function floodRecurrenceLabel(frequency: number): string | null {
+  return floodRecurrenceColor(frequency) ? String(frequency) : null;
+}
+
 export interface FloodRecurrence {
   frequency: number | null;
   years: number[];

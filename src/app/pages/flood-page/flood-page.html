@@ -15,9 +15,20 @@
 
     <section class="legend-card" aria-label="Map layers">
       <h2>Map layers</h2>
-      <div class="layer-key"><span class="swatch flood-swatch"></span><span>Historical flood-prone areas</span></div>
+      <div class="layer-key flood-layer-key"><span>Historical flood-prone areas</span></div>
+      <div class="freq-legend" aria-label="Times flooded, 2011–2020">
+        <span class="freq-legend-title">Times flooded, 2011–2020</span>
+        <div class="freq-ramp">
+          @for (entry of floodLegend; track entry.frequency) {
+            <span class="freq-step"><i [style.backgroundColor]="entry.color"></i><b>{{ entry.frequency }}</b></span>
+          }
+        </div>
+      </div>
       <div class="layer-key"><span class="swatch province-swatch"></span><span>Province boundaries</span></div>
-      <div class="layer-key"><span class="swatch poi-swatch"></span><span>OpenStreetMap places · zoom in</span></div>
+      <div class="layer-key"><span class="swatch poi-swatch"></span><span>OpenStreetMap POIs · visible at 1:1,200,000 and closer</span></div>
+      @if (!poiFilterActive()) {
+        <p class="hint">POIs are contextual and may include places outside the South; flood data covers southern Thailand only.</p>
+      }
       <p class="hint">Flood areas appear when zoomed in. Click the map to inspect a location.</p>
     </section>
 
