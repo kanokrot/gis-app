@@ -10,13 +10,14 @@ import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter.js';
 import MapView from '@arcgis/core/views/MapView.js';
 import Point from '@arcgis/core/geometry/Point.js';
 import * as geometryEngine from '@arcgis/core/geometry/geometryEngine.js';
-import { classifyFloodLocation, FLOOD_RECURRENCE_LEGEND, floodRecurrenceColor, toFloodRecurrence, type FloodLocationStatus, type FloodRecurrence } from './flood-utils';
+import { buildFloodYearStrip, classifyFloodLocation, FLOOD_RECURRENCE_LEGEND, floodRecurrenceColor, toFloodRecurrence, type FloodLocationStatus, type FloodRecurrence } from './flood-utils';
 
 const FLOOD_SERVICE = 'https://gistdaportal.gistda.or.th/data/rest/services/FL_Flood/flood_freq11_20/MapServer';
 const PROVINCE_SERVICE = 'https://services1.arcgis.com/jSaRWj2TDlcN1zOC/ArcGIS/rest/services/Thailand_Province_Boundaries_view/FeatureServer/1';
 const POI_SERVICE = 'https://services-ap1.arcgis.com/iA7fZQOnjY9D67Zx/ArcGIS/rest/services/OSM_AS_POIs/FeatureServer/0';
 const FLOOD_QUERY_FIELDS = ['Freq', 'Y_2011', 'Y_2012', 'Y_2013', 'Y_2014', 'Y_2015', 'Y_2016', 'Y2017', 'Y_2018', 'Y_2019', 'Y_2020', 'PV_TN', 'PV_EN'];
 const SOUTHERN_PROVINCE_CODES = ['80', '90', '93', '84', '96', '94', '95', '92', '86', '91', '82', '81'];
+const DEFAULT_FLOOD_OPACITY = 0.78;
 
 function stringValue(value: unknown): string | null {
   return typeof value === 'string' && value.trim() ? value.trim() : null;
@@ -41,6 +42,7 @@ export class FloodPage implements AfterViewInit, OnDestroy {
   readonly serviceError = signal<string | null>(null);
   readonly poiFilterActive = signal(false);
   readonly floodLegend = FLOOD_RECURRENCE_LEGEND;
+  readonly floodOpacity = signal(DEFAULT_FLOOD_OPACITY);
 
   private view: MapView | null = null;
   private clickHandle: { remove(): void } | null = null;
@@ -52,10 +54,12 @@ export class FloodPage implements AfterViewInit, OnDestroy {
 
   private readonly floodLayer = new MapImageLayer({
     url: FLOOD_SERVICE,
+    imageMaxWidth: 4096,
+    imageMaxHeight: 4096,
     sublayers: [{
       id: 0,
       visible: true,
-      opacity: 0.78,
+      opacity: DEFAULT_FLOOD_OPACITY,
       minScale: 5_500_000,
       renderer: {
         type: 'class-breaks',
@@ -227,6 +231,19 @@ export class FloodPage implements AfterViewInit, OnDestroy {
 
   formatYears(years: number[]): string {
     return years.length ? years.join(', ') : 'No year values returned';
+  }
+
+  yearStrip(years: readonly number[]): { year: number; affected: boolean }[] {
+    return buildFloodYearStrip(years);
+  }
+
+  setFloodOpacity(event: Event): void {
+    const value = Number((event.target as HTMLInputElement).value);
+    if (!Number.isFinite(value)) return;
+    const layer = this.floodLayer.findSublayerById(0);
+    if (!layer) return;
+    layer.opacity = value;
+    this.floodOpacity.set(value);
   }
 }
 

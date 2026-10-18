@@ -50,6 +50,13 @@ export function floodRecurrenceLabel(frequency: number): string | null {
   return floodRecurrenceColor(frequency) ? String(frequency) : null;
 }
 
+export function buildFloodYearStrip(years: readonly number[]): { year: number; affected: boolean }[] {
+  return Array.from({ length: 10 }, (_, index) => {
+    const year = 2011 + index;
+    return { year, affected: years.includes(year) };
+  });
+}
+
 export interface FloodRecurrence {
   frequency: number | null;
   years: number[];

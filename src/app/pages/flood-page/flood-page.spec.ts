@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { classifyFloodLocation, floodRecurrenceColor, floodRecurrenceLabel, toFloodRecurrence } from './flood-utils';
+import { buildFloodYearStrip, classifyFloodLocation, floodRecurrenceColor, floodRecurrenceLabel, toFloodRecurrence } from './flood-utils';
 
 describe('toFloodRecurrence', () => {
   it('converts observed binary year fields and preserves province labels', () => {
@@ -67,5 +67,19 @@ describe('flood recurrence legend', () => {
   it('returns no color or label for unsupported recurrence values', () => {
     expect(floodRecurrenceColor(0)).toBeNull();
     expect(floodRecurrenceLabel(10)).toBeNull();
+  });
+});
+
+describe('buildFloodYearStrip', () => {
+  it('creates all ten years and marks only years with recorded flooding', () => {
+    const strip = buildFloodYearStrip([2011, 2014, 2020]);
+
+    expect(strip).toHaveLength(10);
+    expect(strip.filter((entry) => entry.affected).map((entry) => entry.year)).toEqual([2011, 2014, 2020]);
+    expect(strip[1]).toEqual({ year: 2012, affected: false });
+  });
+
+  it('keeps the entire period visible when no flood years were recorded', () => {
+    expect(buildFloodYearStrip([]).every((entry) => !entry.affected)).toBe(true);
   });
 });

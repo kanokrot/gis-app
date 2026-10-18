@@ -15,7 +15,7 @@
 
     <section class="legend-card" aria-label="Map layers">
       <h2>Map layers</h2>
-      <div class="layer-key flood-layer-key"><span>Historical flood-prone areas</span></div>
+      <div class="layer-key flood-layer-key"><span class="swatch bg-gradient-to-r from-blue-600 to-red-600"></span><span>Flood areas · visible at 1:5,500,000 and closer</span></div>
       <div class="freq-legend" aria-label="Times flooded, 2011–2020">
         <span class="freq-legend-title">Times flooded, 2011–2020</span>
         <div class="freq-ramp">
@@ -26,6 +26,14 @@
       </div>
       <div class="layer-key"><span class="swatch province-swatch"></span><span>Province boundaries</span></div>
       <div class="layer-key"><span class="swatch poi-swatch"></span><span>OpenStreetMap POIs · visible at 1:1,200,000 and closer</span></div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2">
+        <div class="flex items-center justify-between gap-3 text-xs text-zinc-300">
+          <label for="floodOpacity">Flood layer opacity</label>
+          <output>{{ (floodOpacity() * 100).toFixed(0) }}%</output>
+        </div>
+        <input id="floodOpacity" class="mt-2 w-full accent-teal-400" type="range" min="0" max="1" step="0.05"
+          [value]="floodOpacity()" (input)="setFloodOpacity($event)" aria-label="Flood layer opacity">
+      </div>
       @if (!poiFilterActive()) {
         <p class="hint">POIs are contextual and may include places outside the South; flood data covers southern Thailand only.</p>
       }
@@ -45,7 +53,21 @@
           <div class="recurrence">
             <div><span>Province</span><strong>{{ record.provinceEnglish ?? selectedProvince() ?? '—' }}</strong></div>
             <div><span>Recorded flood frequency</span><strong>{{ record.frequency ?? '—' }} times</strong></div>
-            <div class="year-row"><span>Affected years</span><strong class="year-values">{{ formatYears(record.years) }}</strong></div>
+            <div class="year-row">
+              <span>Affected years</span>
+              <div class="mt-2 overflow-x-auto">
+                <div class="grid min-w-[300px] grid-cols-10 gap-1" role="group" aria-label="Affected years, 2011 to 2020">
+                  @for (entry of yearStrip(record.years); track entry.year) {
+                    <span class="flex flex-col items-center rounded border px-0.5 py-1 text-[8px] leading-tight"
+                      [class.border-amber-300]="entry.affected" [class.bg-amber-500/30]="entry.affected" [class.text-amber-100]="entry.affected"
+                      [class.border-zinc-700]="!entry.affected" [class.bg-zinc-900]="!entry.affected" [class.text-zinc-300]="!entry.affected">
+                      <span>{{ entry.year }}</span><strong>{{ entry.affected ? 'Flood' : 'None' }}</strong>
+                    </span>
+                  }
+                </div>
+              </div>
+              <span class="sr-only">Affected years: {{ formatYears(record.years) }}</span>
+            </div>
           </div>
         }
       } @else if (locationStatus() === 'covered-empty') {
