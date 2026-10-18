@@ -40,7 +40,7 @@ export class FloodPage implements AfterViewInit, OnDestroy {
   private disposed = false;
 
   constructor() {
-    this.title.setTitle('Southern Thailand Flood Explorer');
+    this.title.setTitle('Southern Thailand Flood Explorer — Kanokrot Sribuabun');
   }
 
   private readonly floodLayer = new MapImageLayer({
