@@ -1,0 +1,655 @@
+{
+  "metadata": {
+    "riceArea": {
+      "source": "Office of Agricultural Economics (OAE)",
+      "year": "2565/66",
+      "yearConfirmed": true,
+      "unit": "rai",
+      "unitConfirmed": true,
+      "license": "Open Data Common"
+    },
+    "caneArea": {
+      "source": "Office of the Cane and Sugar Board (OCSB)",
+      "year": "2565/66",
+      "yearConfirmed": true,
+      "unit": null,
+      "unitConfirmed": false,
+      "license": null
+    },
+    "machinery": {
+      "source": "National Statistical Office (NSO)",
+      "year": null,
+      "yearConfirmed": false,
+      "catalogYear": "2566",
+      "unit": "holders (ราย)",
+      "unitConfirmed": true,
+      "license": "CC BY"
+    },
+    "provinceBoundaries": {
+      "source": "Globetech Co.,Ltd., MERKATOR Co.,Ltd.",
+      "year": null,
+      "yearConfirmed": false,
+      "unit": null,
+      "unitConfirmed": false,
+      "license": null
+    }
+  },
+  "provinces": [
+    {
+        "province":  "เชียงราย",
+        "riceArea":  1293948,
+        "caneArea":  null,
+        "machineryReported":  150094,
+        "machineryUsed":  109774,
+        "machineryShare":  73.14
+    },
+    {
+        "province":  "พะเยา",
+        "riceArea":  638352,
+        "caneArea":  null,
+        "machineryReported":  70793,
+        "machineryUsed":  55651,
+        "machineryShare":  78.61
+    },
+    {
+        "province":  "ลำปาง",
+        "riceArea":  444761,
+        "caneArea":  null,
+        "machineryReported":  95519,
+        "machineryUsed":  76350,
+        "machineryShare":  79.93
+    },
+    {
+        "province":  "ลำพูน",
+        "riceArea":  99627,
+        "caneArea":  null,
+        "machineryReported":  60261,
+        "machineryUsed":  46646,
+        "machineryShare":  77.41
+    },
+    {
+        "province":  "เชียงใหม่",
+        "riceArea":  554465,
+        "caneArea":  null,
+        "machineryReported":  138784,
+        "machineryUsed":  102728,
+        "machineryShare":  74.02
+    },
+    {
+        "province":  "แม่ฮ่องสอน",
+        "riceArea":  218173,
+        "caneArea":  null,
+        "machineryReported":  37640,
+        "machineryUsed":  23806,
+        "machineryShare":  63.25
+    },
+    {
+        "province":  "ตาก",
+        "riceArea":  384705,
+        "caneArea":  10617,
+        "machineryReported":  63378,
+        "machineryUsed":  44442,
+        "machineryShare":  70.12
+    },
+    {
+        "province":  "กำแพงเพชร",
+        "riceArea":  1265783,
+        "caneArea":  774530,
+        "machineryReported":  84650,
+        "machineryUsed":  76238,
+        "machineryShare":  90.06
+    },
+    {
+        "province":  "สุโขทัย",
+        "riceArea":  1183502,
+        "caneArea":  311181,
+        "machineryReported":  85333,
+        "machineryUsed":  74094,
+        "machineryShare":  86.83
+    },
+    {
+        "province":  "แพร่",
+        "riceArea":  290055,
+        "caneArea":  4539,
+        "machineryReported":  53568,
+        "machineryUsed":  43399,
+        "machineryShare":  81.02
+    },
+    {
+        "province":  "น่าน",
+        "riceArea":  332949,
+        "caneArea":  null,
+        "machineryReported":  81248,
+        "machineryUsed":  54463,
+        "machineryShare":  67.03
+    },
+    {
+        "province":  "อุตรดิตถ์",
+        "riceArea":  623563,
+        "caneArea":  113868,
+        "machineryReported":  59766,
+        "machineryUsed":  48053,
+        "machineryShare":  80.4
+    },
+    {
+        "province":  "พิษณุโลก",
+        "riceArea":  1485281,
+        "caneArea":  136217,
+        "machineryReported":  91186,
+        "machineryUsed":  72112,
+        "machineryShare":  79.08
+    },
+    {
+        "province":  "พิจิตร",
+        "riceArea":  1807669,
+        "caneArea":  73733,
+        "machineryReported":  69931,
+        "machineryUsed":  56077,
+        "machineryShare":  80.19
+    },
+    {
+        "province":  "นครสวรรค์",
+        "riceArea":  2559275,
+        "caneArea":  788223,
+        "machineryReported":  113998,
+        "machineryUsed":  89734,
+        "machineryShare":  78.72
+    },
+    {
+        "province":  "อุทัยธานี",
+        "riceArea":  621706,
+        "caneArea":  307276,
+        "machineryReported":  45993,
+        "machineryUsed":  39576,
+        "machineryShare":  86.05
+    },
+    {
+        "province":  "เพชรบูรณ์",
+        "riceArea":  1230036,
+        "caneArea":  525123,
+        "machineryReported":  105941,
+        "machineryUsed":  91823,
+        "machineryShare":  86.67
+    },
+    {
+        "province":  "เลย",
+        "riceArea":  436985,
+        "caneArea":  337960,
+        "machineryReported":  97911,
+        "machineryUsed":  70346,
+        "machineryShare":  71.85
+    },
+    {
+        "province":  "หนองบัวลำภู",
+        "riceArea":  747136,
+        "caneArea":  346188,
+        "machineryReported":  69791,
+        "machineryUsed":  61064,
+        "machineryShare":  87.5
+    },
+    {
+        "province":  "อุดรธานี",
+        "riceArea":  2027391,
+        "caneArea":  738696,
+        "machineryReported":  187047,
+        "machineryUsed":  130829,
+        "machineryShare":  69.94
+    },
+    {
+        "province":  "หนองคาย",
+        "riceArea":  601167,
+        "caneArea":  73125,
+        "machineryReported":  59659,
+        "machineryUsed":  41777,
+        "machineryShare":  70.03
+    },
+    {
+        "province":  "บึงกาฬ",
+        "riceArea":  481427,
+        "caneArea":  4568,
+        "machineryReported":  63383,
+        "machineryUsed":  40756,
+        "machineryShare":  64.3
+    },
+    {
+        "province":  "สกลนคร",
+        "riceArea":  2162686,
+        "caneArea":  102119,
+        "machineryReported":  195143,
+        "machineryUsed":  154380,
+        "machineryShare":  79.11
+    },
+    {
+        "province":  "นครพนม",
+        "riceArea":  1483507,
+        "caneArea":  16796,
+        "machineryReported":  121772,
+        "machineryUsed":  102490,
+        "machineryShare":  84.17
+    },
+    {
+        "province":  "มุกดาหาร",
+        "riceArea":  461032,
+        "caneArea":  214218,
+        "machineryReported":  59986,
+        "machineryUsed":  51869,
+        "machineryShare":  86.47
+    },
+    {
+        "province":  "ยโสธร",
+        "riceArea":  1364345,
+        "caneArea":  102746,
+        "machineryReported":  93661,
+        "machineryUsed":  85477,
+        "machineryShare":  91.26
+    },
+    {
+        "province":  "อำนาจเจริญ",
+        "riceArea":  1077763,
+        "caneArea":  103675,
+        "machineryReported":  70513,
+        "machineryUsed":  64029,
+        "machineryShare":  90.8
+    },
+    {
+        "province":  "อุบลราชธานี",
+        "riceArea":  4125528,
+        "caneArea":  4116,
+        "machineryReported":  294738,
+        "machineryUsed":  223414,
+        "machineryShare":  75.8
+    },
+    {
+        "province":  "ศรีสะเกษ",
+        "riceArea":  3028471,
+        "caneArea":  12546,
+        "machineryReported":  237362,
+        "machineryUsed":  187837,
+        "machineryShare":  79.14
+    },
+    {
+        "province":  "สุรินทร์",
+        "riceArea":  3133327,
+        "caneArea":  128713,
+        "machineryReported":  217567,
+        "machineryUsed":  183639,
+        "machineryShare":  84.41
+    },
+    {
+        "province":  "บุรีรัมย์",
+        "riceArea":  2998520,
+        "caneArea":  184775,
+        "machineryReported":  214347,
+        "machineryUsed":  168819,
+        "machineryShare":  78.76
+    },
+    {
+        "province":  "มหาสารคาม",
+        "riceArea":  2130023,
+        "caneArea":  132275,
+        "machineryReported":  161655,
+        "machineryUsed":  140913,
+        "machineryShare":  87.17
+    },
+    {
+        "province":  "ร้อยเอ็ด",
+        "riceArea":  3094018,
+        "caneArea":  169769,
+        "machineryReported":  219824,
+        "machineryUsed":  174091,
+        "machineryShare":  79.2
+    },
+    {
+        "province":  "กาฬสินธุ์",
+        "riceArea":  1505471,
+        "caneArea":  447058,
+        "machineryReported":  159029,
+        "machineryUsed":  133229,
+        "machineryShare":  83.78
+    },
+    {
+        "province":  "ขอนแก่น",
+        "riceArea":  2402112,
+        "caneArea":  651492,
+        "machineryReported":  218467,
+        "machineryUsed":  168507,
+        "machineryShare":  77.13
+    },
+    {
+        "province":  "ชัยภูมิ",
+        "riceArea":  1784176,
+        "caneArea":  564052,
+        "machineryReported":  170542,
+        "machineryUsed":  141530,
+        "machineryShare":  82.99
+    },
+    {
+        "province":  "นครราชสีมา",
+        "riceArea":  3531915,
+        "caneArea":  615166,
+        "machineryReported":  279231,
+        "machineryUsed":  226777,
+        "machineryShare":  81.21
+    },
+    {
+        "province":  "สระบุรี",
+        "riceArea":  326548,
+        "caneArea":  147789,
+        "machineryReported":  31079,
+        "machineryUsed":  20480,
+        "machineryShare":  65.9
+    },
+    {
+        "province":  "ลพบุรี",
+        "riceArea":  807018,
+        "caneArea":  678916,
+        "machineryReported":  64807,
+        "machineryUsed":  49412,
+        "machineryShare":  76.24
+    },
+    {
+        "province":  "สิงห์บุรี",
+        "riceArea":  307545,
+        "caneArea":  22659,
+        "machineryReported":  16791,
+        "machineryUsed":  12614,
+        "machineryShare":  75.12
+    },
+    {
+        "province":  "ชัยนาท",
+        "riceArea":  846347,
+        "caneArea":  156463,
+        "machineryReported":  34150,
+        "machineryUsed":  29486,
+        "machineryShare":  86.34
+    },
+    {
+        "province":  "สุพรรณบุรี",
+        "riceArea":  1261740,
+        "caneArea":  610723,
+        "machineryReported":  75568,
+        "machineryUsed":  53919,
+        "machineryShare":  71.35
+    },
+    {
+        "province":  "อ่างทอง",
+        "riceArea":  344353,
+        "caneArea":  22821,
+        "machineryReported":  20891,
+        "machineryUsed":  13280,
+        "machineryShare":  63.57
+    },
+    {
+        "province":  "พระนครศรีอยุธยา",
+        "riceArea":  813855,
+        "caneArea":  null,
+        "machineryReported":  30388,
+        "machineryUsed":  23617,
+        "machineryShare":  77.72
+    },
+    {
+        "province":  "นนทบุรี",
+        "riceArea":  82839,
+        "caneArea":  null,
+        "machineryReported":  9999,
+        "machineryUsed":  4844,
+        "machineryShare":  48.44
+    },
+    {
+        "province":  "กรุงเทพมหานคร",
+        "riceArea":  81743,
+        "caneArea":  null,
+        "machineryReported":  3098,
+        "machineryUsed":  2437,
+        "machineryShare":  78.66
+    },
+    {
+        "province":  "ปทุมธานี",
+        "riceArea":  295153,
+        "caneArea":  null,
+        "machineryReported":  15213,
+        "machineryUsed":  12768,
+        "machineryShare":  83.93
+    },
+    {
+        "province":  "นครนายก",
+        "riceArea":  363813,
+        "caneArea":  null,
+        "machineryReported":  19894,
+        "machineryUsed":  11676,
+        "machineryShare":  58.69
+    },
+    {
+        "province":  "ปราจีนบุรี",
+        "riceArea":  428068,
+        "caneArea":  41647,
+        "machineryReported":  35030,
+        "machineryUsed":  20482,
+        "machineryShare":  58.47
+    },
+    {
+        "province":  "ฉะเชิงเทรา",
+        "riceArea":  634824,
+        "caneArea":  30525,
+        "machineryReported":  46667,
+        "machineryUsed":  31790,
+        "machineryShare":  68.12
+    },
+    {
+        "province":  "สระแก้ว",
+        "riceArea":  761423,
+        "caneArea":  454471,
+        "machineryReported":  63101,
+        "machineryUsed":  54534,
+        "machineryShare":  86.42
+    },
+    {
+        "province":  "จันทบุรี",
+        "riceArea":  11622,
+        "caneArea":  2362,
+        "machineryReported":  46118,
+        "machineryUsed":  33377,
+        "machineryShare":  72.37
+    },
+    {
+        "province":  "ตราด",
+        "riceArea":  12781,
+        "caneArea":  null,
+        "machineryReported":  18286,
+        "machineryUsed":  11878,
+        "machineryShare":  64.96
+    },
+    {
+        "province":  "ระยอง",
+        "riceArea":  9725,
+        "caneArea":  623,
+        "machineryReported":  29956,
+        "machineryUsed":  19912,
+        "machineryShare":  66.47
+    },
+    {
+        "province":  "ชลบุรี",
+        "riceArea":  68756,
+        "caneArea":  141319,
+        "machineryReported":  22627,
+        "machineryUsed":  11877,
+        "machineryShare":  52.49
+    },
+    {
+        "province":  "สมุทรปราการ",
+        "riceArea":  16931,
+        "caneArea":  null,
+        "machineryReported":  4930,
+        "machineryUsed":  1931,
+        "machineryShare":  39.17
+    },
+    {
+        "province":  "สมุทรสาคร",
+        "riceArea":  3857,
+        "caneArea":  null,
+        "machineryReported":  10131,
+        "machineryUsed":  6501,
+        "machineryShare":  64.17
+    },
+    {
+        "province":  "นครปฐม",
+        "riceArea":  257472,
+        "caneArea":  87256,
+        "machineryReported":  38169,
+        "machineryUsed":  26035,
+        "machineryShare":  68.21
+    },
+    {
+        "province":  "กาญจนบุรี",
+        "riceArea":  365616,
+        "caneArea":  734280,
+        "machineryReported":  68700,
+        "machineryUsed":  54804,
+        "machineryShare":  79.77
+    },
+    {
+        "province":  "ราชบุรี",
+        "riceArea":  223532,
+        "caneArea":  181732,
+        "machineryReported":  45525,
+        "machineryUsed":  29801,
+        "machineryShare":  65.46
+    },
+    {
+        "province":  "สมุทรสงคราม",
+        "riceArea":  1843,
+        "caneArea":  null,
+        "machineryReported":  10283,
+        "machineryUsed":  4888,
+        "machineryShare":  47.53
+    },
+    {
+        "province":  "เพชรบุรี",
+        "riceArea":  272518,
+        "caneArea":  41229,
+        "machineryReported":  38399,
+        "machineryUsed":  23302,
+        "machineryShare":  60.68
+    },
+    {
+        "province":  "ประจวบคีรีขันธ์",
+        "riceArea":  21793,
+        "caneArea":  48648,
+        "machineryReported":  45399,
+        "machineryUsed":  16010,
+        "machineryShare":  35.27
+    },
+    {
+        "province":  "ชุมพร",
+        "riceArea":  2222,
+        "caneArea":  null,
+        "machineryReported":  70122,
+        "machineryUsed":  36022,
+        "machineryShare":  51.37
+    },
+    {
+        "province":  "ระนอง",
+        "riceArea":  539,
+        "caneArea":  null,
+        "machineryReported":  23174,
+        "machineryUsed":  10207,
+        "machineryShare":  44.05
+    },
+    {
+        "province":  "สุราษฎร์ธานี",
+        "riceArea":  16677,
+        "caneArea":  null,
+        "machineryReported":  122567,
+        "machineryUsed":  43777,
+        "machineryShare":  35.72
+    },
+    {
+        "province":  "พังงา",
+        "riceArea":  2039,
+        "caneArea":  null,
+        "machineryReported":  28245,
+        "machineryUsed":  9057,
+        "machineryShare":  32.07
+    },
+    {
+        "province":  "ภูเก็ต",
+        "riceArea":  45,
+        "caneArea":  null,
+        "machineryReported":  2391,
+        "machineryUsed":  1539,
+        "machineryShare":  64.37
+    },
+    {
+        "province":  "กระบี่",
+        "riceArea":  6257,
+        "caneArea":  null,
+        "machineryReported":  47613,
+        "machineryUsed":  24560,
+        "machineryShare":  51.58
+    },
+    {
+        "province":  "ตรัง",
+        "riceArea":  9487,
+        "caneArea":  null,
+        "machineryReported":  71981,
+        "machineryUsed":  34353,
+        "machineryShare":  47.73
+    },
+    {
+        "province":  "นครศรีธรรมราช",
+        "riceArea":  172946,
+        "caneArea":  null,
+        "machineryReported":  170675,
+        "machineryUsed":  56915,
+        "machineryShare":  33.35
+    },
+    {
+        "province":  "พัทลุง",
+        "riceArea":  112418,
+        "caneArea":  null,
+        "machineryReported":  81385,
+        "machineryUsed":  20114,
+        "machineryShare":  24.71
+    },
+    {
+        "province":  "สงขลา",
+        "riceArea":  153596,
+        "caneArea":  null,
+        "machineryReported":  105777,
+        "machineryUsed":  40943,
+        "machineryShare":  38.71
+    },
+    {
+        "province":  "สตูล",
+        "riceArea":  14658,
+        "caneArea":  null,
+        "machineryReported":  36365,
+        "machineryUsed":  19933,
+        "machineryShare":  54.81
+    },
+    {
+        "province":  "ปัตตานี",
+        "riceArea":  66478,
+        "caneArea":  null,
+        "machineryReported":  65161,
+        "machineryUsed":  12740,
+        "machineryShare":  19.55
+    },
+    {
+        "province":  "ยะลา",
+        "riceArea":  18764,
+        "caneArea":  null,
+        "machineryReported":  56008,
+        "machineryUsed":  10371,
+        "machineryShare":  18.52
+    },
+    {
+        "province":  "นราธิวาส",
+        "riceArea":  29356,
+        "caneArea":  null,
+        "machineryReported":  74101,
+        "machineryUsed":  7789,
+        "machineryShare":  10.51
+    }
+  ]
+}

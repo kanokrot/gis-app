@@ -29,6 +29,10 @@ export const routes: Routes = [    {
         loadComponent: () => import('./pages/flood-page/flood-page').then(m => m.FloodPage)
     },
     {
+        path: 'agriculture',
+        loadComponent: () => import('./pages/agriculture-page/agriculture-page').then(m => m.AgriculturePage)
+    },
+    {
         path: '**',
         loadComponent: () => import('./pages/not-found-page/not-found-page').then(m => m.NotFoundPage)
     },

@@ -1,0 +1,66 @@
+<main class="agriculture-shell">
+  <div #mapNode class="map" aria-label="Thailand province map for rice, sugarcane and overall machinery data"></div>
+
+  <aside class="panel glass" aria-label="Agriculture comparison controls">
+    <header class="brand-row">
+      <a class="home-mark" routerLink="/" aria-label="Back to home">K</a>
+      <span class="eyebrow">GIS EXPLORER · PROVINCE DATA</span>
+    </header>
+
+    <section class="intro">
+      <p class="mono-label">$ open agriculture-by-province</p>
+      <h1>Rice, sugarcane &amp; machinery use by province</h1>
+      <p class="subhead">Compare wet-season rice area and forecast sugarcane planted area for 2565/66 with the provincial share of holders reporting any machinery use.</p>
+    </section>
+
+    <section class="control-card" aria-label="Map metric">
+      <label for="metricSelect">Map layer</label>
+      <select id="metricSelect" [value]="metric()" (change)="selectMetric($event)">
+        @for (item of metrics; track item.id) {
+          <option [value]="item.id">{{ item.label }}</option>
+        }
+      </select>
+      <p class="metric-description">{{ activeMetric().description }}</p>
+      <p class="metric-year">{{ activeMetric().sourceYear }}</p>
+      <div class="legend-list" aria-label="Map legend">
+        @for (item of legend(); track $index) {
+          <div class="legend-row"><span class="legend-chip" [style.backgroundColor]="item.color"></span><span>{{ item.label }}</span></div>
+        }
+        <div class="legend-row"><span class="legend-chip no-record"></span><span>No record in supplied file</span></div>
+      </div>
+    </section>
+
+    <section class="selection-card" aria-live="polite" aria-label="Selected province">
+      <p class="mono-label">PROVINCE CHECK</p>
+      @if (loadState() === 'loading') {
+        <p class="state-message">Loading province boundaries…</p>
+      } @else if (loadState() === 'error') {
+        <p class="state-message error">The province map service is unavailable. Please try again later.</p>
+      } @else if (selectedRecord(); as record) {
+        <h2>{{ selectedProvince() }}</h2>
+        @switch (metric()) {
+          @case ('riceArea') {
+            <div class="stat-row"><span>Rice planted area · 2565/66</span><strong>{{ formatSelectedValue(record) }}</strong></div>
+          }
+          @case ('caneArea') {
+            <div class="stat-row"><span>Forecast planted area (CaneArea) · 2565/66</span><strong>{{ formatSelectedValue(record) }}</strong></div>
+            <p class="small-note">Unit is not confirmed in the supplied dictionary. Missing provinces have no row in the file; they are not zero.</p>
+          }
+          @case ('machineryShare') {
+            <div class="stat-row"><span>Share of holders reporting any machinery use</span><strong>{{ formatSelectedValue(record) }}</strong></div>
+            <div class="stat-row"><span>Using / reported</span><strong>{{ formatValue(record.machineryUsed) }} / {{ formatValue(record.machineryReported) }} holders</strong></div>
+            <p class="small-note">Year is not stated in the supplied file (the NSO catalog identifies 2566). This is a provincial aggregate, not household-level detail; no machine type is specified.</p>
+          }
+        }
+      } @else {
+        <p class="state-message">Click a province to inspect its available value.</p>
+      }
+    </section>
+
+    <footer class="credits">
+      <p>Province-level summaries do not describe individual households. The machinery file reports overall use only and does not identify specific machine types. Rice data is for crop year 2565/66. The sugarcane file has 47 province rows for 2565/66, and its supplied dictionary does not state the area unit.</p>
+      <p class="attribution">Sources: Office of Agricultural Economics (wet-season rice) · Office of the Cane and Sugar Board (sugarcane) · National Statistical Office (machinery) · Province boundaries: Globetech Co.,Ltd., MERKATOR Co.,Ltd.</p>
+      <p class="license-note">Catalog terms: OAE Open Data Common; NSO CC BY; sugarcane and province-boundary licenses not confirmed. Confirm reuse terms with those sources.</p>
+    </footer>
+  </aside>
+</main>
