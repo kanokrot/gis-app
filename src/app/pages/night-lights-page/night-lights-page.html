@@ -1,0 +1,73 @@
+<main class="night-page">
+  <div class="page-shell">
+    <header class="page-header">
+      <div class="heading-group">
+        <a class="back-link" routerLink="/project" aria-label="Back to projects">← Projects</a>
+        <p class="eyebrow">VIIRS · SATELLITE RADIANCE</p>
+        <h1>Night Lights <span>Explorer</span></h1>
+        <p class="intro">A view of the cities that keep the night awake.</p>
+      </div>
+      <nav class="region-nav" aria-label="Choose map region">
+        @for (region of regions; track region.name) {
+          <button type="button" [class.active]="activeRegion() === region.name" [attr.aria-pressed]="activeRegion() === region.name" (click)="setRegion(region.name)">
+            {{ region.name }}
+          </button>
+        }
+      </nav>
+    </header>
+
+    <section class="map-section" aria-label="Night lights map">
+      <div #mapNode class="map-canvas"></div>
+      <div class="map-topline">
+        <span><i class="live-dot" aria-hidden="true"></i> {{ activeRegion() }} <b>·</b> {{ regionCities().length }} cities</span>
+        <div class="year-control" role="group" aria-label="Select city radiance year">
+          <span class="year-label">COMPARE</span>
+          <button type="button" [class.active]="year() === 2014" [attr.aria-pressed]="year() === 2014" (click)="setYear(2014)">2014</button>
+          <span class="year-divider">/</span>
+          <button type="button" [class.active]="year() === 2024" [attr.aria-pressed]="year() === 2024" (click)="setYear(2024)">2024</button>
+        </div>
+      </div>
+      <div class="map-legend"><span class="legend-light"></span> City radiance <span class="legend-selected"></span> Selected city</div>
+      <div class="map-attribution">NASA GIBS · VIIRS Black Marble</div>
+    </section>
+
+    <section class="insights" aria-label="City brightness and selected city details">
+      <div class="ranking-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">REGIONAL INDEX · {{ year() }}</p><h2>Brightest cities</h2></div>
+          <span class="unit-label">RADIANCE <span>·</span> REL. UNITS</span>
+        </div>
+        <ol class="ranking-list">
+          @for (city of rankedCities(); track city.id; let index = $index) {
+            <li>
+              <button type="button" class="rank-row" [class.selected]="selectedCityId() === city.id" [attr.aria-pressed]="selectedCityId() === city.id" (click)="selectCity(city)">
+                <span class="rank-number">{{ (index + 1).toString().padStart(2, '0') }}</span>
+                <span class="city-name">{{ city.name }}</span>
+                <span class="bar-track" aria-hidden="true"><span class="bar-fill" [style.width.%]="barWidth(city)"></span></span>
+                <span class="rank-value">{{ formatRadiance(brightness(city)) }}</span>
+              </button>
+            </li>
+          }
+        </ol>
+      </div>
+
+      <aside class="detail-panel" aria-live="polite" aria-label="Selected city details">
+        <div class="section-heading detail-heading">
+          <div><p class="eyebrow">CITY PROFILE · {{ year() }}</p><h2>{{ selectedCity().name }}</h2></div>
+          <span class="selected-indicator" aria-label="Selected city"></span>
+        </div>
+        <p class="coordinates">{{ selectedCity().latitude.toFixed(4) }}° {{ selectedCity().latitude >= 0 ? 'N' : 'S' }} <span>·</span> {{ absoluteLongitude().toFixed(4) }}° {{ selectedCity().longitude >= 0 ? 'E' : 'W' }}</p>
+        <div class="primary-metric"><span>TOTAL RADIANCE</span><strong>{{ formatRadiance(brightness(selectedCity())) }}</strong><small>relative units</small></div>
+        <dl class="detail-metrics">
+          <div><dt>CHANGE <span>2014—2024</span></dt><dd [class.negative]="selectedCity().changePercent < 0">{{ selectedCity().changePercent > 0 ? '+' : '' }}{{ selectedCity().changePercent }}%</dd></div>
+          <div><dt>LIT AREA</dt><dd>{{ formatRadiance(selectedCity().litAreaKm2) }} <small>km²</small></dd></div>
+        </dl>
+      </aside>
+    </section>
+
+    <footer class="data-note">
+      <span>DATA NOTE</span>
+      <p>{{ citiesDataNote }}</p>
+    </footer>
+  </div>
+</main>

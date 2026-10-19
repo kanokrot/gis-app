@@ -37,6 +37,10 @@ export const routes: Routes = [    {
         loadComponent: () => import('./pages/transit-access-page/transit-access-page').then(m => m.TransitAccessPage)
     },
     {
+        path: 'night-lights',
+        loadComponent: () => import('./pages/night-lights-page/night-lights-page').then(m => m.NightLightsPage)
+    },
+    {
         path: '**',
         loadComponent: () => import('./pages/not-found-page/not-found-page').then(m => m.NotFoundPage)
     },

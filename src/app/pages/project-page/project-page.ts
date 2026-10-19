@@ -52,6 +52,13 @@ const projectItems: ProjectItem[] = [
     tags: ['Angular', 'ArcGIS', 'Bangkok', 'Open Data'],
     demoRoute: '/transit-access',
   },
+  {
+    id: 'night-lights-explorer',
+    title: 'Night Lights Explorer',
+    description: 'Explore satellite-observed city lights, compare years and inspect placeholder radiance summaries for major cities around the world.',
+    tags: ['Angular', 'ArcGIS', 'NASA GIBS', 'VIIRS'],
+    demoRoute: '/night-lights',
+  },
 ];
 
 @Component({
