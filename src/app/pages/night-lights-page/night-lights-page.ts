@@ -234,7 +234,8 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
         haloSize: 2.5,
         xoffset: 10,
         yoffset: 12,
-        font: { family: 'Space Grotesk', size: 11, weight: 'bold' },
+        // ArcGIS rasterizes map text from its own font catalog; external page fonts are not registered there.
+        font: { family: 'Arial', size: 11, weight: 'bold' },
       }),
     })));
   }
