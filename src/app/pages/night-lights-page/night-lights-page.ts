@@ -20,6 +20,8 @@ const REGIONS: { name: RegionName; center: [number, number]; zoom: number }[] = 
   { name: 'Europe', center: [15, 50], zoom: 4 },
   { name: 'World', center: [12, 20], zoom: 2 },
 ];
+const BLACK_MARBLE_MAX_ZOOM = 8;
+const CITY_LABEL_ALL_ZOOM = 6;
 
 @Component({
   selector: 'app-night-lights-page',
@@ -33,6 +35,7 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
   private readonly title = inject(Title);
   private view: MapView | null = null;
   private clickHandle: { remove(): void } | null = null;
+  private zoomHandle: { remove(): void } | null = null;
   private disposed = false;
 
   readonly regions = REGIONS;
@@ -65,18 +68,7 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
         outline: { color: '#241b0b', width: 1.5 },
       },
     },
-    labelingInfo: [{
-      labelExpressionInfo: { expression: '$feature.name' },
-      labelPlacement: 'above-right',
-      deconflictionStrategy: 'static',
-      symbol: {
-        type: 'text',
-        color: '#fff2cf',
-        haloColor: '#05070d',
-        haloSize: 2,
-        font: { family: 'Space Grotesk', size: 11, weight: 'bold' },
-      },
-    }],
+    labelingInfo: [this.cityLabelInfo()],
     labelsVisible: true,
     popupEnabled: false,
   });
@@ -102,12 +94,16 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
       map,
       center: [108, 11],
       zoom: 4,
-      constraints: { minZoom: 2, maxZoom: 17, snapToZoom: false, rotationEnabled: false },
+      constraints: { minZoom: 2, maxZoom: BLACK_MARBLE_MAX_ZOOM, snapToZoom: false, rotationEnabled: false },
       background: { color: '#05070d' },
       ui: { components: ['attribution'] },
     });
     this.view.when().then(() => {
       if (this.disposed || !this.view) return;
+      // The vector dark-gray basemap separates its canvas from the place-label reference layer.
+      this.view.map?.basemap?.referenceLayers.removeAll();
+      this.zoomHandle = this.view.watch('zoom', () => this.updateCityLabels());
+      this.updateCityLabels();
       this.clickHandle = this.view.on('click', async (event) => {
         const hit = await this.view?.hitTest(event, { include: this.cityLayer });
         const graphic = hit?.results.find((result) => result.type === 'graphic')?.graphic;
@@ -163,7 +159,29 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
     this.selectedCity.set(city);
     this.selectedCityId.set(city.id);
     this.highlightSelectedCity();
+    this.updateCityLabels();
     if (flyTo) void this.view?.goTo({ center: [city.longitude, city.latitude], zoom: Math.max(this.view?.zoom ?? 6, 6) }, { duration: 650 });
+  }
+
+  private cityLabelInfo(): __esri.LabelClassProperties {
+    const labelAllCities = (this.view?.zoom ?? 0) >= CITY_LABEL_ALL_ZOOM;
+    return {
+      labelExpressionInfo: { expression: '$feature.name' },
+      where: labelAllCities ? '1=1' : `cityId = '${this.selectedCityId()}'`,
+      labelPlacement: 'above-right',
+      deconflictionStrategy: 'static',
+      symbol: {
+        type: 'text',
+        color: '#fff2cf',
+        haloColor: '#05070d',
+        haloSize: 2.5,
+        font: { family: 'Space Grotesk', size: 11, weight: 'bold' },
+      },
+    };
+  }
+
+  private updateCityLabels(): void {
+    this.cityLayer.labelingInfo = [this.cityLabelInfo()];
   }
 
   private featuresFor(cities: readonly City[]): Graphic[] {
@@ -197,6 +215,7 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.disposed = true;
     this.clickHandle?.remove();
+    this.zoomHandle?.remove();
     this.view?.destroy();
     this.view = null;
   }
