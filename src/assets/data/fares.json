@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "currency": "THB",
+  "fareTableSchema": {
+    "by station count": { "items": { "stationCount": "integer stop count", "amount": "number in THB" } },
+    "by distance": { "items": { "maxMeters": "number, inclusive upper bound in metres", "amount": "number in THB" } },
+    "flat": { "items": { "amount": "number in THB per operator entry" } }
+  },
+  "operators": {
+    "BTS": { "name": "BTS Skytrain", "status": "missing", "fareRuleType": null, "fareTable": [], "currency": "THB", "asOf": null, "sourceUrl": "https://www.bts.co.th/tickets/ticket-rabbit-farerate.html", "notes": "The operator publishes a fare matrix, but reuse terms for the table are not stated here; excluded pending review. BTS Gold Line also needs a separate official table." },
+    "BEM_MRT_BLUE": { "name": "MRT Blue Line (BEM)", "status": "missing", "fareRuleType": null, "fareTable": [], "currency": "THB", "asOf": null, "sourceUrl": "https://metro.bemplc.co.th/Fare-Rate?lang=en", "notes": "Official fare information is published, but reuse terms for the tariff table are unclear; excluded pending review." },
+    "MRTA_PURPLE": { "name": "MRT Purple Line (MRTA/BEM)", "status": "missing", "fareRuleType": null, "fareTable": [], "currency": "THB", "asOf": null, "sourceUrl": "https://www.mrta.co.th/en/ticket-information", "notes": "MRTA publishes ticket and fare information, but reuse terms for the tariff table are unclear; excluded pending review. A 40 THB daily cap was announced for Dec 2025–Nov 2026 and is not computed." },
+    "ARL": { "name": "Airport Rail Link", "status": "missing", "fareRuleType": null, "fareTable": [], "currency": "THB", "asOf": null, "sourceUrl": "https://thailand.prd.go.th/en/content/category/detail/id/2078/iid/439307", "notes": "AERA 1 is the operator. No current official fare table with clear reuse terms was confirmed; excluded pending review." },
+    "MRT_YELLOW": { "name": "MRT Yellow Line (EBM)", "status": "missing", "fareRuleType": null, "fareTable": [], "currency": "THB", "asOf": null, "sourceUrl": "https://ebm.co.th/en/routemap/", "notes": "EBM publishes an official fare matrix, but reuse terms for the tariff table are unclear; excluded pending review." },
+    "MRT_PINK": { "name": "MRT Pink Line (NBM)", "status": "missing", "fareRuleType": null, "fareTable": [], "currency": "THB", "asOf": null, "sourceUrl": "https://nbm.co.th/en/routemap/", "notes": "NBM publishes fare information, but reuse terms and the currently applicable full table were not confirmed; excluded pending review." },
+    "SRT_RED": { "name": "SRT Red Line (SRTET)", "status": "missing", "fareRuleType": null, "fareTable": [], "currency": "THB", "asOf": null, "sourceUrl": "https://www.srtet.co.th/en/fare-information", "notes": "SRTET publishes an official fare matrix, but reuse terms for the tariff table are unclear; excluded pending review. MRTA announced a 40 THB daily cap for Dec 2025–Nov 2026 and it is not computed." },
+    "BTS_GOLD": { "name": "BTS Gold Line", "status": "missing", "fareRuleType": null, "fareTable": [], "currency": "THB", "asOf": null, "sourceUrl": "https://www.bts.co.th/eng/info/GoldLine-info-history.html", "notes": "BTS publishes a flat fare on the Gold Line profile, but no separately reusable current fare table was confirmed; excluded pending review." }
+  },
+  "modes": {
+    "current": { "enabled": true, "description": "Each operator charges separately. Transfers between operators start a separate fare; published caps and discounts are not calculated.", "fareCapsComputed": false },
+    "common-2027": { "enabled": false, "status": "placeholder", "minimumFare": 17, "maximumFare": 45, "currency": "THB", "singleEntryFee": null, "description": "Configurable placeholder only. A single-entry common-fare policy and calculation rules have not been confirmed as published official rules." }
+  }
+}

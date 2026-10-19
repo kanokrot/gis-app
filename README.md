@@ -12,6 +12,7 @@ A personal portfolio website built with Angular. Its **HouseBuy** page appears i
 - HouseBuy GIS demo linked from the Projects page.
 - Southern Thailand Flood Explorer at `/flood`, linked from the Projects page and available as a direct lazy-loaded route; it is not in the navigation pill.
 - **Rice, sugarcane & machinery use by province** at `/agriculture`, linked from the Projects page and available as a direct lazy-loaded route; it is not in the navigation pill.
+- **Bangkok Transit Access Explorer** at `/transit-access`, linked from the Projects page and available as a direct lazy-loaded route; it is not in the navigation pill.
 
 ### HouseBuy GIS demo
 
@@ -36,6 +37,14 @@ A personal portfolio website built with Angular. Its **HouseBuy** page appears i
 - Rice and sugarcane values are for crop/production year 2565/66. Rice area is in rai; the sugarcane unit is not confirmed. The machinery share is calculated from holders reporting machinery use divided by holders reporting, but the year is not stated in the supplied file (the NSO catalog identifies 2566).
 - These are province-level summaries, not household-level records. Machinery data does not identify machine types. Dot positions are randomized within provinces and do not represent actual field locations; sugarcane dot units are unconfirmed.
 
+### Bangkok Transit Access Explorer
+
+- Maps the share of each Bangkok district's population in the supplied category `1` for three summaries: 400 m public transport areas, 500 m bus-stop areas, and 1,000 m public transport areas. The 500 m file is specifically labelled `trans_bus_stop`.
+- The page uses a compact derived district summary from the three catalog CSV resources and queries Bangkok district geometries from an ArcGIS feature service. The original CSV files are not included in the repository.
+- The supplied tables use `FID` categories `-1` and `1`; the page interprets `1` as a spatial match to the access area and `-1` as no match. The catalog provides no field dictionary, so this interpretation remains unconfirmed. The population totals differ slightly across files, and the three resources use separate layers; their results are not a controlled comparison of distance alone.
+- The catalog does not specify a reuse license for the transit dataset. Contact the Bangkok Metropolitan Administration before redistribution.
+- The catalog last updated the transit-access resources on November 11, 2024; the underlying population reference year is not stated.
+
 ## Tech stack
 
 Versions below are the ranges declared in `package.json`.
@@ -50,6 +59,15 @@ Versions below are the ranges declared in `package.json`.
 | TypeScript | `~5.9.2` |
 | Vitest | `^4.0.8` |
 | npm package manager | `11.7.0` |
+
+## Project guides
+
+The [`docs/`](docs/README.md) folder explains how each interactive mapping project works, where it gets its data, and how to interpret its results:
+
+- [HouseBuy GIS demo](docs/housebuy-gis.md)
+- [Southern Thailand Flood Explorer](docs/flood-explorer.md)
+- [Agriculture by province](docs/agriculture-explorer.md)
+- [Bangkok Transit Access Explorer](docs/bangkok-transit-access.md)
 
 ## Getting started
 
@@ -82,6 +100,7 @@ Routes are lazy-loaded in `src/app/app.routes.ts`.
 | `/demo-gis` | HouseBuy GIS demo |
 | `/flood` | Southern Thailand Flood Explorer |
 | `/agriculture` | Rice, sugarcane & machinery use by province |
+| `/transit-access` | Bangkok Transit Access Explorer |
 | Any unmatched path | Not Found |
 
 ## Application flow
@@ -99,9 +118,11 @@ flowchart TD
     Routes --> GIS[HouseBuy demo]
     Routes --> Flood[Southern Thailand Flood Explorer]
     Routes --> Agriculture[Rice, sugarcane & machinery use by province]
+    Routes --> Transit[Bangkok Transit Access Explorer]
     Projects -->|HouseBuy GIS demo link| GIS
     Projects -->|Flood Explorer link| Flood
     Projects -->|Rice, sugarcane and machinery link| Agriculture
+    Projects -->|Bangkok Transit Access Explorer link| Transit
     Routes -. unmatched URL .-> Fallback
 ```
 
@@ -229,9 +250,12 @@ The Agriculture Explorer uses the province-boundary feature service above to ret
 - National Statistical Office (NSO) — counts of holders reporting machinery use and holders reporting; the supplied CSV does not state a year, while the catalog identifies 2566. The bundled metadata identifies the license as CC BY.
 - Province boundaries are credited in the page to Globetech Co.,Ltd. and MERKATOR Co.,Ltd.; the reuse license is not confirmed.
 
+The Bangkok Transit Access Explorer uses the public [Bangkok transit-access dataset](https://data.go.th/en/dataset/trans_service). Its 400 m and 1,000 m summary tables and the 500 m bus-stop summary are derived into a small local JSON file. District geometry comes from the public [TH_Bangkok_District feature service](https://services1.arcgis.com/jSaRWj2TDlcN1zOC/ArcGIS/rest/services/TH_Bangkok_District/FeatureServer/0). The transit dataset license and the boundary service reuse terms are not confirmed in the available metadata.
+
 ## Known limitations
 
 - HouseBuy is an ArcGIS experiment, not a real estate marketplace or transaction system.
 - GISTDA flood data is historical and its reuse license is unspecified in the service metadata. It must not be treated as a live flood warning or a complete record of all flood-prone locations.
 - Agriculture indicators are aggregated by province. The sugarcane unit and reuse license, and the province-boundary reuse license, are not confirmed in the bundled metadata.
+- Transit-access categories are interpreted from the supplied `FID` values because no field dictionary was provided. The 400 m, 500 m bus-stop, and 1,000 m summaries may use different source layers and should not be read as a clean distance-only comparison. Their reuse licenses are unconfirmed.
 - Diagnostic `console` logging remains in `src/app/pages/demo-gis-page/demo-gis-page.ts`.

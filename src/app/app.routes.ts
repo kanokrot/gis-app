@@ -33,6 +33,10 @@ export const routes: Routes = [    {
         loadComponent: () => import('./pages/agriculture-page/agriculture-page').then(m => m.AgriculturePage)
     },
     {
+        path: 'transit-access',
+        loadComponent: () => import('./pages/transit-access-page/transit-access-page').then(m => m.TransitAccessPage)
+    },
+    {
         path: '**',
         loadComponent: () => import('./pages/not-found-page/not-found-page').then(m => m.NotFoundPage)
     },

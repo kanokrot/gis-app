@@ -1,0 +1,204 @@
+<main class="observatory" [class.dock-collapsed]="!dockExpanded()" [class.fare-open]="fareCardOpen()" [class.ranking-expanded]="rankingExpanded()">
+  <div #mapNode class="map" aria-label="Bangkok district access summary map" (pointerleave)="clearMapHover()"></div>
+  <div class="map-texture" aria-hidden="true"></div>
+  <div class="map-zoom" role="group" aria-label="Map zoom controls">
+    <button type="button" aria-label="Zoom in" (click)="zoomBy(1)">+</button>
+    <button type="button" aria-label="Zoom out" (click)="zoomBy(-1)">−</button>
+  </div>
+
+  <header class="top-title">
+    <div class="title-lockup">
+      <h1>Mapping transit access across Bangkok</h1>
+      <details class="info-popover">
+        <summary aria-label="How to interpret these data" title="Data interpretation">i</summary>
+        <div class="popover-content">
+          <strong>Data interpretation</strong>
+          <p>Category 1 is treated as population matching the mapped access area; -1 is treated as no match. The catalog has no field dictionary, so confirm this interpretation with the publisher.</p>
+          <p>The 500 m file is labelled for bus stops. The 400 m and 1,000 m summaries use separate public transport layers, so this is not a controlled distance-only comparison.</p>
+          <p>Halo colour is the access value of the district containing each station, not a measured station catchment.</p>
+          <p>Catalog updated 11 November 2024; the population reference year is not stated. These are district totals, not household-level results or individual routes.</p>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <section class="rank-card" [class.collapsed]="!rankingExpanded()" aria-label="Five highest access districts at 500 metres">
+    <div class="rank-header">
+      <span class="eyebrow">01 / TOP 5 &middot; 500 M</span>
+      <button class="rank-toggle" type="button" [attr.aria-expanded]="rankingExpanded()" aria-controls="ranking-content" [attr.aria-label]="rankingExpanded() ? 'Collapse ranking' : 'Expand ranking'" (click)="toggleRanking()">
+        <span>TOP 5</span>
+        <svg aria-hidden="true" viewBox="0 0 16 16"><path d="m3 6 5 5 5-5" /></svg>
+      </button>
+    </div>
+      <div id="ranking-content" class="rank-content" [hidden]="!rankingExpanded()">
+        <h2>5 highest-access districts <span>&middot; 500 m</span></h2>
+        <ol class="rank-list">
+          @for (record of topDistricts(); track record.district; let i = $index) {
+            <li>
+              <button type="button" class="rank-button" (click)="selectFromList(record)" [title]="bilingualName(record.district)">
+                <span class="rank-number">0{{ i + 1 }}</span>
+                <span class="rank-name" [style.color]="accessColor(getShare(record, '500mBusStop'))">{{ bilingualName(record.district) }}</span>
+                <span class="rank-value">{{ formatShare(record, '500mBusStop') }}</span>
+              </button>
+            </li>
+          }
+        </ol>
+      </div>
+  </section>
+
+  <section class="fare-card" [class.collapsed]="!fareCardOpen()" aria-label="Trip planner">
+    <header class="fare-card-header">
+      <div><p class="panel-kicker">02 / FARE CALCULATOR</p><h2>Plan a rail trip</h2></div>
+      <button class="fare-collapse" type="button" (click)="toggleFareCard()" [attr.aria-expanded]="fareCardOpen()" aria-label="Collapse or expand trip planner">{{ fareCardOpen() ? '−' : '+' }}</button>
+    </header>
+    @if (fareCardOpen()) {
+    <div class="planner-content">
+      <div class="fare-mode-row" aria-label="Fare mode">
+        <button type="button" [class.active]="fareMode() === 'current'" [attr.aria-pressed]="fareMode() === 'current'" (click)="setFareMode('current')">Current fares</button>
+        <button type="button" disabled aria-disabled="true" title="Disabled until official rules are published">Common · 2027</button>
+      </div>
+      <div class="fare-endpoint-choice" role="group" aria-label="Choose which map click sets a station">
+        <span>Map click sets:</span>
+        <button type="button" [class.active]="fareEndpoint() === 'from'" [attr.aria-pressed]="fareEndpoint() === 'from'" (click)="fareEndpoint.set('from')">Origin</button>
+        <button type="button" [class.active]="fareEndpoint() === 'to'" [attr.aria-pressed]="fareEndpoint() === 'to'" (click)="fareEndpoint.set('to')">Destination</button>
+      </div>
+      <div class="fare-fields">
+        <div class="fare-field">
+          <label for="from-station-search"><span class="endpoint-dot from-dot">A</span> From</label>
+          <input id="from-station-search" role="combobox" aria-autocomplete="list" aria-controls="from-station-options" [attr.aria-expanded]="fromSearch().length > 0 && stationOptions('from').length > 0" [value]="fromSearch()" (input)="updateStationSearch('from', $event)" (keydown)="handleStationKeydown($event, 'from')" placeholder="Search Thai or English" autocomplete="off">
+          @if (fromSearch() && stationOptions('from').length) {
+            <ul id="from-station-options" class="station-options" role="listbox" aria-label="Origin stations">
+              @for (station of stationOptions('from'); track station.stationId; let i = $index) { <li><button type="button" role="option" [attr.aria-selected]="fromStationId() === station.stationId" [id]="'from-station-option-' + i" (keydown)="handleStationOptionKeydown($event, 'from', i)" (click)="chooseFareStation('from', station)">{{ stationLabel(station) }}</button></li> }
+            </ul>
+          }
+        </div>
+        <button class="fare-swap" type="button" (click)="swapFareStations()" aria-label="Swap origin and destination">⇅</button>
+        <div class="fare-field">
+          <label for="to-station-search"><span class="endpoint-dot to-dot">B</span> To</label>
+          <input id="to-station-search" role="combobox" aria-autocomplete="list" aria-controls="to-station-options" [attr.aria-expanded]="toSearch().length > 0 && stationOptions('to').length > 0" [value]="toSearch()" (input)="updateStationSearch('to', $event)" (keydown)="handleStationKeydown($event, 'to')" placeholder="Search Thai or English" autocomplete="off">
+          @if (toSearch() && stationOptions('to').length) {
+            <ul id="to-station-options" class="station-options" role="listbox" aria-label="Destination stations">
+              @for (station of stationOptions('to'); track station.stationId; let i = $index) { <li><button type="button" role="option" [attr.aria-selected]="toStationId() === station.stationId" [id]="'to-station-option-' + i" (keydown)="handleStationOptionKeydown($event, 'to', i)" (click)="chooseFareStation('to', station)">{{ stationLabel(station) }}</button></li> }
+            </ul>
+          }
+        </div>
+      </div>
+      <div class="fare-result" aria-live="polite" aria-atomic="true">
+        @if (fareRoute(); as route) {
+          <div class="fare-total">
+            @if (fareTotal(); as total) { <strong>{{ total }}<small>THB</small></strong><span>Estimated fare</span> }
+            @else { <strong class="fare-unavailable">Fare unavailable</strong><span>@for (entry of fareBreakdown(); track entry.key) { {{ entry.name }}{{ $last ? '' : ' · ' }} }</span> }
+          </div>
+          <div class="fare-summary">{{ route.stationCount }} stations <i></i> {{ route.transferCount }} transfer{{ route.transferCount === 1 ? '' : 's' }}</div>
+          <div class="fare-breakdown">
+            @for (entry of fareBreakdown(); track entry.key) { <p><span class="operator-swatch" [style.backgroundColor]="operatorColor(entry.key)"></span><span>{{ entry.name }}</span><strong>{{ entry.amount === null ? 'Fare unavailable' : entry.amount + ' THB' }}</strong></p> }
+          </div>
+          <div class="route-timeline" aria-label="Route timeline">
+            <div class="timeline-end"><span class="timeline-node from-dot">A</span><div><small>ORIGIN</small><strong>{{ stationLabel(route.nodes[0]) }}</strong></div></div>
+            @for (segment of route.lineSegments; track $index; let last = $last) {
+              <div class="timeline-run" [style.--segment-color]="lineColor(segment.line)"><span class="timeline-rail"></span><span class="run-label">{{ segment.stations.length }} stations <small>{{ segment.line }}</small></span></div>
+              @if (!last && transferPairs(route)[$index]; as pair) {
+                <div class="timeline-transfer"><span class="transfer-connector"></span><span><strong>{{ stationLabel(pair[0]) }} / {{ stationLabel(pair[1]) }}</strong><small>{{ pair[0].operator !== pair[1].operator && fareMode() === 'current' ? 'Pay new entry fee' : 'Change lines' }}</small></span></div>
+              }
+            }
+            <div class="timeline-end"><span class="timeline-node to-dot">B</span><div><small>DESTINATION</small><strong>{{ stationLabel(route.nodes[route.nodes.length - 1]) }}</strong></div></div>
+          </div>
+          @if (route.transfers.length) { <p class="fare-transfers"><strong>Interchanges:</strong> @for (station of route.transfers; track station.id; let last = $last) { {{ stationLabel(station) }}{{ last ? '' : ', ' }} }</p> }
+        } @else {
+          <p class="fare-message">{{ fareMessage() }}</p>
+          @if (!fromStationId() && !toStationId()) {
+            <div class="example-routes"><p class="panel-kicker">QUICK ROUTES</p>
+              <button type="button" (click)="selectExampleRoute('Siam', 'Asok')"><span>BTS</span>Siam <i>→</i> Asok</button>
+              <button type="button" (click)="selectExampleRoute('Hua Lamphong', 'Sukhumvit')"><span>MRT BLUE</span>Hua Lamphong <i>→</i> Sukhumvit</button>
+              <button type="button" (click)="selectExampleRoute('Siam', 'Tao Poon')"><span>TRANSFER</span>Siam <i>→</i> Tao Poon</button>
+            </div>
+          }
+        }
+      </div>
+      <details class="selected-readout" [class.empty]="!selectedSummary()" [open]="!!selectedSummary()" aria-label="Selected district access values">
+        <summary>Selected district <span>{{ selectedSummary() ? '· ' + bilingualName(selectedSummary()!.district) : '· Choose a district' }}</span></summary>
+        @if (selectedSummary(); as record) {
+          <p class="rank-position">RANK <strong>{{ rankFor(record, distance()) }}</strong> / 50 <span>· {{ distanceLabel(distance()) }}</span></p>
+          <div class="meter-list">@for (item of distances; track item.id) { <div class="meter-row"><span>{{ item.shortLabel }}</span><span class="meter-track"><span class="meter-fill" [style.width.%]="getShare(record, item.id) ?? 0" [style.backgroundColor]="accessColor(getShare(record, item.id))"></span></span><strong>{{ formatShare(record, item.id) }}</strong></div> }</div>
+        } @else { <p class="rank-position">Click a district or ranking to inspect the supplied summaries.</p> }
+      </details>
+    </div>
+    }
+    <footer class="fare-footer">Estimate before discounts. {{ fareAsOfText() === 'not published' ? 'Fare tables not published yet.' : 'Fares as of ' + fareAsOfText() + '.' }} Sources: @for (source of fareSources(); track source.url; let last = $last) { <a [href]="source.url" target="_blank" rel="noopener noreferrer">{{ source.name }}</a>{{ last ? '' : ' · ' }} }</footer>
+  </section>
+  @if (tooltip(); as tip) {
+    <div class="map-tooltip" role="status" aria-live="polite" [style.left.px]="tip.x" [style.top.px]="tip.y">{{ tip.text }}</div>
+  }
+  @if (loadState() === 'loading') {
+    <div class="map-state" role="status" aria-live="polite">Loading district boundaries&hellip;</div>
+  }
+
+  <nav class="map-controls" aria-label="Map controls">
+    @for (item of distances; track item.id) {
+      <button type="button" class="map-button" [class.active]="distance() === item.id" [attr.aria-pressed]="distance() === item.id" (click)="selectDistanceId(item.id)">{{ item.shortLabel }}</button>
+    }
+    <button type="button" class="map-button" [attr.aria-pressed]="railVisible()" (click)="toggleRailLayers()">{{ railVisible() ? 'Hide Stops' : 'Show Stops' }}</button>
+    <button type="button" class="map-button" [class.active]="halosVisible()" [attr.aria-pressed]="halosVisible()" (click)="toggleHalos()">{{ halosVisible() ? 'Hide Access Halos' : 'Show Access Halos' }}</button>
+    <button type="button" class="map-button unavailable" disabled aria-label="3D view is unavailable on this 2D map">3D</button>
+  </nav>
+
+  <div class="coordinate-readout" aria-live="polite"><span>MAP POSITION</span><strong>{{ mapCoordinates() }}</strong></div>
+
+  <section #panelNode class="data-dock" [class.collapsed]="!dockExpanded()" aria-label="Map legend and district comparison">
+    <header class="dock-header">
+      <span>03 / MAP KEY &middot; ALL DISTRICTS</span>
+      <div class="dock-attribution" aria-label="Map attribution">
+        <a href="https://www.esri.com/" target="_blank" rel="noopener noreferrer">Esri</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">&copy; OpenStreetMap contributors</a>
+        <span>Powered by Esri</span>
+      </div>
+      <button class="dock-toggle" type="button" [attr.aria-expanded]="dockExpanded()" aria-controls="dock-content" aria-label="Collapse/Expand panel" (click)="toggleDock()">
+        <svg aria-hidden="true" viewBox="0 0 16 16"><path d="m3 6 5 5 5-5" /></svg>
+      </button>
+    </header>
+      <div id="dock-content" class="dock-content" [hidden]="!dockExpanded()">
+        <div class="dock-section layer-legend">
+          <p class="panel-kicker">MAP KEY</p>
+          <div class="legend-line"><span class="district-swatch"></span><span>Bangkok district boundary</span></div>
+          <div class="legend-line"><span class="selected-swatch"></span><span>Selected district</span></div>
+          <p class="route-note">Rail lines &middot; OpenStreetMap</p>
+          <div class="line-key" aria-label="Rail route colours">
+            @for (item of railLegend(); track item.line) {
+              <div class="line-key-item"><span [style.backgroundColor]="item.color"></span>{{ item.line }}</div>
+            }
+          </div>
+          @if (railLoadState() === 'loading') {
+            <p class="route-note">Loading rail routes and stations&hellip;</p>
+          }
+          @for (message of railErrors(); track message) {
+            <p class="route-note rail-error" role="status">{{ message }}</p>
+          }
+        </div>
+        <div class="dock-section thermal-legend">
+          <p class="panel-kicker">ACCESS SHARE &middot; {{ distanceLabel(distance()) }}</p>
+          <div class="thermal-key">
+            <div class="thermal-gradient" aria-hidden="true"></div>
+            <div class="thermal-ranges">
+              <span>Most access &middot; 80-100%</span>
+              <span>60-80%</span>
+              <span>40-60%</span>
+              <span>20-40%</span>
+              <span>Least access &middot; 0-20%</span>
+            </div>
+          </div>
+          <p class="no-record-key"><span></span>No record</p>
+        </div>
+        <div class="dock-section histogram-section">
+          <div class="histogram-heading"><p class="panel-kicker">04 / ALL DISTRICTS</p><span>Sorted by share &middot; {{ distanceLabel(distance()) }}</span></div>
+          <div class="histogram" role="img" [attr.aria-label]="'District access share histogram for ' + distanceLabel(distance())">
+            @for (record of sortedDistricts(); track record.district) {
+              <button type="button" class="histogram-bar" [class.selected]="selectedDistrict()?.district === record.district" [style.height.%]="histogramHeight(record)" [style.backgroundColor]="selectedDistrict()?.district === record.district ? '#e6eaf2' : accessColor(getShare(record, distance()))" [attr.aria-label]="bilingualName(record.district) + ': ' + formatShare(record, distance())" [title]="bilingualName(record.district) + ' - ' + formatShare(record, distance())" (click)="selectFromList(record)"></button>
+            }
+          </div>
+          <div class="histogram-axis"><span>0%</span><span>50%</span><span>100%</span></div>
+        </div>
+      </div>
+    <footer class="dock-credit">Data: Bangkok Metropolitan Administration via data.go.th &middot; District boundary: TH_Bangkok_District feature service &middot; &copy; OpenStreetMap contributors &middot; reuse terms not confirmed</footer>
+  </section>
+</main>

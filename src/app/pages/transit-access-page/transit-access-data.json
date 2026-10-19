@@ -1,0 +1,860 @@
+{
+    "metadata":  {
+                     "source":  "Bangkok Metropolitan Administration via data.go.th",
+                     "catalogUpdated":  "2024-11-11",
+                     "license":  null,
+                     "codeMeaning":  "FID categories are preserved from the supplied summaries; category 1 is interpreted as a spatial match and -1 as no match."
+                 },
+    "districts":  [
+                      {
+                          "district":  "คลองเตย",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  26371,
+                                                       "totalPopulation":  89514
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  65920,
+                                                              "totalPopulation":  89515
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  70660,
+                                                        "totalPopulation":  89514
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "คลองสาน",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  38751,
+                                                       "totalPopulation":  64961
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  63932,
+                                                              "totalPopulation":  64959
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  64732,
+                                                        "totalPopulation":  64960
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "คลองสามวา",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  0,
+                                                       "totalPopulation":  211988
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  94040,
+                                                              "totalPopulation":  211988
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  0,
+                                                        "totalPopulation":  211988
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "คันนายาว",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  1808,
+                                                       "totalPopulation":  95202
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  58711,
+                                                              "totalPopulation":  95202
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  9377,
+                                                        "totalPopulation":  95203
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "จตุจักร",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  35849,
+                                                       "totalPopulation":  154002
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  114821,
+                                                              "totalPopulation":  154000
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  109294,
+                                                        "totalPopulation":  154001
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "จอมทอง",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  20505,
+                                                       "totalPopulation":  141092
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  79959,
+                                                              "totalPopulation":  141092
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  76991,
+                                                        "totalPopulation":  141091
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ดอนเมือง",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  8667,
+                                                       "totalPopulation":  165940
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  60317,
+                                                              "totalPopulation":  165941
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  43563,
+                                                        "totalPopulation":  165940
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ดินแดง",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  20712,
+                                                       "totalPopulation":  109801
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  104257,
+                                                              "totalPopulation":  109801
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  72307,
+                                                        "totalPopulation":  109801
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ดุสิต",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  27539,
+                                                       "totalPopulation":  75813
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  74417,
+                                                              "totalPopulation":  75812
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  66663,
+                                                        "totalPopulation":  75812
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ตลิ่งชัน",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  5575,
+                                                       "totalPopulation":  101324
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  62909,
+                                                              "totalPopulation":  101322
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  30225,
+                                                        "totalPopulation":  101324
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ทวีวัฒนา",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  1431,
+                                                       "totalPopulation":  79762
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  32271,
+                                                              "totalPopulation":  79762
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  7009,
+                                                        "totalPopulation":  79762
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ทุ่งครุ",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  0,
+                                                       "totalPopulation":  124087
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  36957,
+                                                              "totalPopulation":  124087
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  0,
+                                                        "totalPopulation":  124087
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ธนบุรี",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  55962,
+                                                       "totalPopulation":  98285
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  97444,
+                                                              "totalPopulation":  98288
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  96767,
+                                                        "totalPopulation":  98286
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางเขน",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  10826,
+                                                       "totalPopulation":  184611
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  94857,
+                                                              "totalPopulation":  184611
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  36476,
+                                                        "totalPopulation":  184611
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางแค",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  15153,
+                                                       "totalPopulation":  192245
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  116508,
+                                                              "totalPopulation":  192243
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  56352,
+                                                        "totalPopulation":  192246
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางกอกใหญ่",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  36043,
+                                                       "totalPopulation":  60672
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  52989,
+                                                              "totalPopulation":  60673
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  60662,
+                                                        "totalPopulation":  60673
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางกอกน้อย",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  27981,
+                                                       "totalPopulation":  98028
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  80887,
+                                                              "totalPopulation":  98028
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  80977,
+                                                        "totalPopulation":  98028
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางกะปิ",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  14695,
+                                                       "totalPopulation":  141355
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  94352,
+                                                              "totalPopulation":  141356
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  48869,
+                                                        "totalPopulation":  141355
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางขุนเทียน",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  4123,
+                                                       "totalPopulation":  185132
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  47637,
+                                                              "totalPopulation":  185132
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  22388,
+                                                        "totalPopulation":  185132
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางคอแหลม",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  18272,
+                                                       "totalPopulation":  77674
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  59706,
+                                                              "totalPopulation":  77674
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  57932,
+                                                        "totalPopulation":  77675
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางซื่อ",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  38980,
+                                                       "totalPopulation":  118634
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  103587,
+                                                              "totalPopulation":  118635
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  101018,
+                                                        "totalPopulation":  118634
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางนา",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  9580,
+                                                       "totalPopulation":  85351
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  48838,
+                                                              "totalPopulation":  85351
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  33216,
+                                                        "totalPopulation":  85352
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางบอน",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  5126,
+                                                       "totalPopulation":  100198
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  62295,
+                                                              "totalPopulation":  100199
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  28654,
+                                                        "totalPopulation":  100199
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางพลัด",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  37105,
+                                                       "totalPopulation":  87205
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  70836,
+                                                              "totalPopulation":  87205
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  75797,
+                                                        "totalPopulation":  87205
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บางรัก",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  24776,
+                                                       "totalPopulation":  42923
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  42921,
+                                                              "totalPopulation":  42921
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  42921,
+                                                        "totalPopulation":  42921
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "บึงกุ่ม",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  754,
+                                                       "totalPopulation":  137121
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  82371,
+                                                              "totalPopulation":  137120
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  6690,
+                                                        "totalPopulation":  137120
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ปทุมวัน",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  24226,
+                                                       "totalPopulation":  40080
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  39330,
+                                                              "totalPopulation":  40080
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  40079,
+                                                        "totalPopulation":  40079
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ประเวศ",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  1799,
+                                                       "totalPopulation":  183871
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  74528,
+                                                              "totalPopulation":  183871
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  8475,
+                                                        "totalPopulation":  183870
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ป้อมปราบศัตรูพ่าย",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  27562,
+                                                       "totalPopulation":  38100
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  38100,
+                                                              "totalPopulation":  38100
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  38100,
+                                                        "totalPopulation":  38100
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "พญาไท",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  16569,
+                                                       "totalPopulation":  64037
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  60054,
+                                                              "totalPopulation":  64037
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  57478,
+                                                        "totalPopulation":  64037
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "พระโขนง",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  11373,
+                                                       "totalPopulation":  85698
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  17765,
+                                                              "totalPopulation":  85697
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  41299,
+                                                        "totalPopulation":  85698
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "พระนคร",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  21190,
+                                                       "totalPopulation":  40256
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  40203,
+                                                              "totalPopulation":  40254
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  40254,
+                                                        "totalPopulation":  40254
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ภาษีเจริญ",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  33974,
+                                                       "totalPopulation":  121833
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  78407,
+                                                              "totalPopulation":  121831
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  69620,
+                                                        "totalPopulation":  121831
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "มีนบุรี",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  4917,
+                                                       "totalPopulation":  141027
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  77591,
+                                                              "totalPopulation":  141027
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  23466,
+                                                        "totalPopulation":  141027
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ยานนาวา",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  17264,
+                                                       "totalPopulation":  73420
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  65403,
+                                                              "totalPopulation":  73420
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  51652,
+                                                        "totalPopulation":  73420
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ราชเทวี",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  44132,
+                                                       "totalPopulation":  64469
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  64254,
+                                                              "totalPopulation":  64469
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  64469,
+                                                        "totalPopulation":  64469
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ราษฎร์บูรณะ",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  7224,
+                                                       "totalPopulation":  75533
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  50430,
+                                                              "totalPopulation":  75533
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  27536,
+                                                        "totalPopulation":  75532
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ลาดกระบัง",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  4830,
+                                                       "totalPopulation":  179902
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  60570,
+                                                              "totalPopulation":  179903
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  25958,
+                                                        "totalPopulation":  179902
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ลาดพร้าว",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  0,
+                                                       "totalPopulation":  113191
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  75534,
+                                                              "totalPopulation":  113192
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  0,
+                                                        "totalPopulation":  113191
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "วังทองหลาง",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  5781,
+                                                       "totalPopulation":  103452
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  74416,
+                                                              "totalPopulation":  103452
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  20677,
+                                                        "totalPopulation":  103452
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "วัฒนา",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  27608,
+                                                       "totalPopulation":  80518
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  64602,
+                                                              "totalPopulation":  80517
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  66473,
+                                                        "totalPopulation":  80517
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "สวนหลวง",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  28110,
+                                                       "totalPopulation":  122992
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  79012,
+                                                              "totalPopulation":  122992
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  77429,
+                                                        "totalPopulation":  122993
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "สะพานสูง",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  2568,
+                                                       "totalPopulation":  97057
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  48082,
+                                                              "totalPopulation":  97057
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  16229,
+                                                        "totalPopulation":  97056
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "สัมพันธวงศ์",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  18018,
+                                                       "totalPopulation":  19546
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  19546,
+                                                              "totalPopulation":  19546
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  19546,
+                                                        "totalPopulation":  19546
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "สาทร",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  12422,
+                                                       "totalPopulation":  71304
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  62702,
+                                                              "totalPopulation":  71306
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  38832,
+                                                        "totalPopulation":  71304
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "สายไหม",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  5868,
+                                                       "totalPopulation":  210948
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  79924,
+                                                              "totalPopulation":  210947
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  30265,
+                                                        "totalPopulation":  210947
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "หนองแขม",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  947,
+                                                       "totalPopulation":  155125
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  80463,
+                                                              "totalPopulation":  155125
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  6012,
+                                                        "totalPopulation":  155125
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "หนองจอก",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  0,
+                                                       "totalPopulation":  184159
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  25818,
+                                                              "totalPopulation":  184159
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  0,
+                                                        "totalPopulation":  184159
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "หลักสี่",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  4980,
+                                                       "totalPopulation":  98375
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  38453,
+                                                              "totalPopulation":  98374
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  33800,
+                                                        "totalPopulation":  98374
+                                                    }
+                                      }
+                      },
+                      {
+                          "district":  "ห้วยขวาง",
+                          "metrics":  {
+                                          "400m":  {
+                                                       "code1Population":  14440,
+                                                       "totalPopulation":  83695
+                                                   },
+                                          "500mBusStop":  {
+                                                              "code1Population":  56812,
+                                                              "totalPopulation":  83695
+                                                          },
+                                          "1000m":  {
+                                                        "code1Population":  45021,
+                                                        "totalPopulation":  83695
+                                                    }
+                                      }
+                      }
+                  ]
+}

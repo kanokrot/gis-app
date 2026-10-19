@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "bangkok-rail-stations.geojson",
+  "candidateRadiusMeters": 250,
+  "policy": "Candidates default to unverified and are excluded from routing until reviewed against an authoritative station or route source. Verified entries include their official review source.",
+  "transfers": [
+    {
+      "from": {
+        "nodeId": "station-113@BTS Gold",
+        "stationId": "station-113",
+        "stationName": "กรุงธนบุรี",
+        "line": "BTS Gold",
+        "operator": "BTS"
+      },
+      "to": {
+        "nodeId": "station-113@BTS Silom",
+        "stationId": "station-113",
+        "stationName": "กรุงธนบุรี",
+        "line": "BTS Silom",
+        "operator": "BTS"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://www.bts.co.th/eng/info/GoldLine-info-history.html",
+      "verificationSourceUrl": "https://www.bts.co.th/eng/info/GoldLine-info-history.html"
+    },
+    {
+      "from": {
+        "nodeId": "station-50@MRT Blue",
+        "stationId": "station-50",
+        "stationName": "เตาปูน",
+        "line": "MRT Blue",
+        "operator": "BEM_MRT_BLUE"
+      },
+      "to": {
+        "nodeId": "station-50@MRT Purple",
+        "stationId": "station-50",
+        "stationName": "เตาปูน",
+        "line": "MRT Purple",
+        "operator": "MRTA_PURPLE"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://www.mrta.co.th/en/chaloem-ratchamongkhon-line/27808",
+      "verificationSourceUrl": "https://www.mrta.co.th/en/chaloem-ratchamongkhon-line/27808"
+    },
+    {
+      "from": {
+        "nodeId": "station-30@MRT Blue",
+        "stationId": "station-30",
+        "stationName": "บางซื่อ",
+        "line": "MRT Blue",
+        "operator": "BEM_MRT_BLUE"
+      },
+      "to": {
+        "nodeId": "station-103@SRT Red",
+        "stationId": "station-103",
+        "stationName": "กรุงเทพอภิวัฒน์",
+        "line": "SRT Red",
+        "operator": "SRT_RED"
+      },
+      "distanceMeters": 187,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://www.srtet.co.th/en/station-information?id=1",
+      "verificationSourceUrl": "https://www.srtet.co.th/en/station-information?id=1"
+    },
+    {
+      "from": {
+        "nodeId": "station-43@BTS Silom",
+        "stationId": "station-43",
+        "stationName": "บางหว้า",
+        "line": "BTS Silom",
+        "operator": "BTS"
+      },
+      "to": {
+        "nodeId": "station-43@MRT Blue",
+        "stationId": "station-43",
+        "stationName": "บางหว้า",
+        "line": "MRT Blue",
+        "operator": "BEM_MRT_BLUE"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf",
+      "verificationSourceUrl": "https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf"
+    },
+    {
+      "from": {
+        "nodeId": "station-4@BTS Sukhumvit",
+        "stationId": "station-4",
+        "stationName": "พญาไท",
+        "line": "BTS Sukhumvit",
+        "operator": "BTS"
+      },
+      "to": {
+        "nodeId": "station-4@Airport Rail Link",
+        "stationId": "station-4",
+        "stationName": "พญาไท",
+        "line": "Airport Rail Link",
+        "operator": "ARL"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf",
+      "verificationSourceUrl": "https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf"
+    },
+    {
+      "from": {
+        "nodeId": "station-38@Airport Rail Link",
+        "stationId": "station-38",
+        "stationName": "รามคำแหง",
+        "line": "Airport Rail Link",
+        "operator": "ARL"
+      },
+      "to": {
+        "nodeId": "station-115@BTS Sukhumvit",
+        "stationId": "station-115",
+        "stationName": "สุขุมวิท 71",
+        "line": "BTS Sukhumvit",
+        "operator": "BTS"
+      },
+      "distanceMeters": 103,
+      "verified": false,
+      "verificationNote": "Generated from OSM line tags / proximity. Review an official route map or station source before enabling this transfer.",
+      "verificationSourceUrl": null
+    },
+    {
+      "from": {
+        "nodeId": "station-26@MRT Blue",
+        "stationId": "station-26",
+        "stationName": "ลาดพร้าว",
+        "line": "MRT Blue",
+        "operator": "BEM_MRT_BLUE"
+      },
+      "to": {
+        "nodeId": "station-26@MRT Yellow",
+        "stationId": "station-26",
+        "stationName": "ลาดพร้าว",
+        "line": "MRT Yellow",
+        "operator": "MRT_YELLOW"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://www.mrta.co.th/en/news-release/13688",
+      "verificationSourceUrl": "https://www.mrta.co.th/en/news-release/13688"
+    },
+    {
+      "from": {
+        "nodeId": "station-109@BTS Sukhumvit",
+        "stationId": "station-109",
+        "stationName": "วัดพระศรีมหาธาตุ",
+        "line": "BTS Sukhumvit",
+        "operator": "BTS"
+      },
+      "to": {
+        "nodeId": "station-109@MRT Pink",
+        "stationId": "station-109",
+        "stationName": "วัดพระศรีมหาธาตุ",
+        "line": "MRT Pink",
+        "operator": "MRT_PINK"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://www.mrta.co.th/en/search-result?category_id=25",
+      "verificationSourceUrl": "https://www.mrta.co.th/en/search-result?category_id=25"
+    },
+    {
+      "from": {
+        "nodeId": "station-44@BTS Sukhumvit",
+        "stationId": "station-44",
+        "stationName": "สยาม",
+        "line": "BTS Sukhumvit",
+        "operator": "BTS"
+      },
+      "to": {
+        "nodeId": "station-44@BTS Silom",
+        "stationId": "station-44",
+        "stationName": "สยาม",
+        "line": "BTS Silom",
+        "operator": "BTS"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf",
+      "verificationSourceUrl": "https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf"
+    },
+    {
+      "from": {
+        "nodeId": "station-28@MRT Blue",
+        "stationId": "station-28",
+        "stationName": "สวนจตุจักร",
+        "line": "MRT Blue",
+        "operator": "BEM_MRT_BLUE"
+      },
+      "to": {
+        "nodeId": "station-76@BTS Sukhumvit",
+        "stationId": "station-76",
+        "stationName": "หมอชิต",
+        "line": "BTS Sukhumvit",
+        "operator": "BTS"
+      },
+      "distanceMeters": 68,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf",
+      "verificationSourceUrl": "https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf"
+    },
+    {
+      "from": {
+        "nodeId": "station-74@BTS Sukhumvit",
+        "stationId": "station-74",
+        "stationName": "สำโรง",
+        "line": "BTS Sukhumvit",
+        "operator": "BTS"
+      },
+      "to": {
+        "nodeId": "station-74@MRT Yellow",
+        "stationId": "station-74",
+        "stationName": "สำโรง",
+        "line": "MRT Yellow",
+        "operator": "MRT_YELLOW"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://www.mrta.co.th/en/the-yellow-line",
+      "verificationSourceUrl": "https://www.mrta.co.th/en/the-yellow-line"
+    },
+    {
+      "from": {
+        "nodeId": "station-21@MRT Blue",
+        "stationId": "station-21",
+        "stationName": "สีลม",
+        "line": "MRT Blue",
+        "operator": "BEM_MRT_BLUE"
+      },
+      "to": {
+        "nodeId": "station-21@BTS Silom",
+        "stationId": "station-21",
+        "stationName": "สีลม",
+        "line": "BTS Silom",
+        "operator": "BTS"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf",
+      "verificationSourceUrl": "https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf"
+    },
+    {
+      "from": {
+        "nodeId": "station-19@MRT Blue",
+        "stationId": "station-19",
+        "stationName": "สุขุมวิท",
+        "line": "MRT Blue",
+        "operator": "BEM_MRT_BLUE"
+      },
+      "to": {
+        "nodeId": "station-19@BTS Sukhumvit",
+        "stationId": "station-19",
+        "stationName": "สุขุมวิท",
+        "line": "BTS Sukhumvit",
+        "operator": "BTS"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf",
+      "verificationSourceUrl": "https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf"
+    },
+    {
+      "from": {
+        "nodeId": "station-66@SRT Red",
+        "stationId": "station-66",
+        "stationName": "หลักสี่",
+        "line": "SRT Red",
+        "operator": "SRT_RED"
+      },
+      "to": {
+        "nodeId": "station-66@MRT Pink",
+        "stationId": "station-66",
+        "stationName": "หลักสี่",
+        "line": "MRT Pink",
+        "operator": "MRT_PINK"
+      },
+      "distanceMeters": 0,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://www.mrta.co.th/en/search-result?category_id=25",
+      "verificationSourceUrl": "https://www.mrta.co.th/en/search-result?category_id=25"
+    },
+    {
+      "from": {
+        "nodeId": "station-13@BTS Sukhumvit",
+        "stationId": "station-13",
+        "stationName": "อโศก",
+        "line": "BTS Sukhumvit",
+        "operator": "BTS"
+      },
+      "to": {
+        "nodeId": "station-19@MRT Blue",
+        "stationId": "station-19",
+        "stationName": "สุขุมวิท",
+        "line": "MRT Blue",
+        "operator": "BEM_MRT_BLUE"
+      },
+      "distanceMeters": 128,
+      "verified": true,
+      "verificationNote": "Reviewed against the official interchange/route source: https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf",
+      "verificationSourceUrl": "https://btsapp1.bts.co.th/WebApplication/storage_file/files/AW_Travelling_Back_Printed_Dec18.pdf"
+    }
+  ]
+}

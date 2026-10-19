@@ -45,6 +45,13 @@ const projectItems: ProjectItem[] = [
     tags: ['Angular', 'ArcGIS', 'OAE', 'NSO', 'Tailwind'],
     demoRoute: '/agriculture',
   },
+  {
+    id: 'transit-access-explorer',
+    title: 'Bangkok Transit Access Explorer',
+    description: 'A district-level comparison of population summaries for 400 m public transport areas, 500 m bus-stop areas and 1,000 m public transport areas.',
+    tags: ['Angular', 'ArcGIS', 'Bangkok', 'Open Data'],
+    demoRoute: '/transit-access',
+  },
 ];
 
 @Component({
