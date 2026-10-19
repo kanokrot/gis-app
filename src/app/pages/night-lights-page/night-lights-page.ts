@@ -49,7 +49,8 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
 
   private readonly cityLayer = new FeatureLayer({
     title: 'City radiance locations',
-    source: this.featuresFor(this.regionCities()),
+    source: this.featuresFor(this.allCities),
+    definitionExpression: this.cityFilter(citiesData.regions['Southeast Asia']),
     objectIdField: 'OBJECTID',
     fields: [
       { name: 'OBJECTID', alias: 'Object ID', type: 'oid' },
@@ -58,16 +59,7 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
       { name: 'radiance2014', alias: '2014 radiance', type: 'double' },
       { name: 'radiance2024', alias: '2024 radiance', type: 'double' },
     ],
-    renderer: {
-      type: 'simple',
-      symbol: {
-        type: 'simple-marker',
-        style: 'circle',
-        size: 7,
-        color: '#ffc857',
-        outline: { color: '#241b0b', width: 1.5 },
-      },
-    },
+    renderer: this.cityRenderer(7),
     labelingInfo: [this.cityLabelInfo()],
     labelsVisible: true,
     popupEnabled: false,
@@ -102,8 +94,12 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
       if (this.disposed || !this.view) return;
       // The vector dark-gray basemap separates its canvas from the place-label reference layer.
       this.view.map?.basemap?.referenceLayers.removeAll();
-      this.zoomHandle = this.view.watch('zoom', () => this.updateCityLabels());
+      this.zoomHandle = this.view.watch('zoom', () => {
+        this.updateCityLabels();
+        this.updateCityMarkers();
+      });
       this.updateCityLabels();
+      this.updateCityMarkers();
       this.clickHandle = this.view.on('click', async (event) => {
         const hit = await this.view?.hitTest(event, { include: this.cityLayer });
         const graphic = hit?.results.find((result) => result.type === 'graphic')?.graphic;
@@ -120,9 +116,13 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
     this.activeRegion.set(region);
     const cities = region === 'World' ? this.allCities : citiesData.regions[region];
     this.regionCities.set(cities);
-    this.cityLayer.source = this.featuresFor(cities);
-    const firstCity = cities[0];
-    this.selectCity(firstCity, false);
+    this.cityLayer.definitionExpression = region === 'World' ? '1=1' : this.cityFilter(cities);
+    const currentSelection = cities.find((city) => city.id === this.selectedCityId());
+    const selectedCity = currentSelection ?? cities.reduce((brightest, city) =>
+      this.brightness(city) > this.brightness(brightest) ? city : brightest,
+    );
+    this.selectCity(selectedCity, false);
+    this.updateCityMarkers();
     const destination = this.regions.find((entry) => entry.name === region)!;
     void this.view?.goTo({ center: destination.center, zoom: destination.zoom }, { duration: 850, easing: 'ease-in-out' });
   }
@@ -164,7 +164,7 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
   }
 
   private cityLabelInfo(): __esri.LabelClassProperties {
-    const labelAllCities = (this.view?.zoom ?? 0) >= CITY_LABEL_ALL_ZOOM;
+    const labelAllCities = this.activeRegion() !== 'World' && (this.view?.zoom ?? 0) >= CITY_LABEL_ALL_ZOOM;
     return {
       labelExpressionInfo: { expression: '$feature.name' },
       where: labelAllCities ? '1=1' : `cityId = '${this.selectedCityId()}'`,
@@ -182,6 +182,29 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
 
   private updateCityLabels(): void {
     this.cityLayer.labelingInfo = [this.cityLabelInfo()];
+  }
+
+  private updateCityMarkers(): void {
+    const zoom = this.view?.zoom ?? 2;
+    const worldScale = this.activeRegion() === 'World' && zoom <= 3;
+    this.cityLayer.renderer = this.cityRenderer(worldScale ? 3 : 7);
+  }
+
+  private cityFilter(cities: readonly City[]): string {
+    return `cityId IN (${cities.map((city) => `'${city.id.replaceAll("'", "''")}'`).join(', ')})`;
+  }
+
+  private cityRenderer(size: number): __esri.SimpleRendererProperties & { type: 'simple' } {
+    return {
+      type: 'simple',
+      symbol: {
+        type: 'simple-marker',
+        style: 'circle',
+        size,
+        color: '#ffc857',
+        outline: { color: '#241b0b', width: size <= 3 ? 0.6 : 1.5 },
+      },
+    };
   }
 
   private featuresFor(cities: readonly City[]): Graphic[] {
