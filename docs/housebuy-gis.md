@@ -5,6 +5,29 @@
 
 HouseBuy is the portfolio's experimental ArcGIS mapping demo. It does not provide property listings or real-estate purchasing services.
 
+## Flow
+
+```mermaid
+flowchart TD
+    Open[Open /demo-gis] --> Create[Create Bangkok Map and MapView]
+    Create --> Controls[Attach map controls, click handler, and scale watcher]
+    Controls --> Ready[Map is interactive]
+    Create -. asynchronous .-> Basemap[Load selected basemap]
+    Create -. asynchronous .-> Places[Load OSM POI and heatmap layers]
+    Create -. asynchronous .-> Transport[Load transport vector tiles and style]
+    Ready --> Explore[Pan, zoom, rotate, or change basemap]
+    Explore --> Scale[Update scale-dependent layers and taxi display mode]
+    Ready --> PlaceQuery[Choose Bangkok]
+    PlaceQuery --> Boundary[Query province service and draw boundary]
+    Ready --> Taxi[Enable taxi analysis]
+    Taxi --> NYC[Move view to New York City]
+    NYC --> CSV[Load taxi CSV and keep valid NYC pickup points]
+    CSV --> Filters[Apply fare and passenger filters]
+    Filters --> Analysis[Refresh summaries and 12-bin fare histogram]
+    Filters --> Render[Render macro markers, geohash bins, or rides by scale]
+    Render --> Inspect[Inspect a ride or aggregated bin]
+```
+
 ## Map setup and layers
 
 The page creates a 2D `MapView` over Bangkok with dark vector and satellite basemap choices. It includes navigation, rotation and north reset, scale, coordinates, and a home view. The operational layers combine a Thailand transport vector-tile service, Bangkok/province boundaries, OSM points of interest, taxi data, and graphics used for demos and selections.

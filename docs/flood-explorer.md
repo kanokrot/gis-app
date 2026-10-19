@@ -5,6 +5,24 @@
 
 The page maps GISTDA recurrent flood-prone areas recorded for 2011–2020 across 12 southern provinces. It is historical information, not a live flood forecast or safety warning.
 
+## Flow
+
+```mermaid
+flowchart TD
+    Open[Open /flood] --> Map[Create map with flood, province, and place layers]
+    Map --> Ready[Map ready; load service layers]
+    Ready --> Click[Click a location]
+    Click --> Marker[Show clicked point]
+    Click --> Queries[Query flood polygons and containing province in parallel]
+    Queries --> Match{Flood polygon returned?}
+    Match -->|Yes| Recurrence[Show recurrence and recorded years]
+    Match -->|No| Coverage{Province is in dataset coverage?}
+    Coverage -->|Yes| Empty[Show no matching polygon in this dataset]
+    Coverage -->|No| Outside[Show outside dataset coverage]
+    Queries -->|Service error| Error[Show query error]
+    Map --> POI[Filter OSM places to covered provinces]
+```
+
 ## Data and map layers
 
 - A GISTDA `MapImageLayer` renders the flood recurrence polygons. The page styles the `Freq` field with class breaks and reads year attributes (`Y_2011` through `Y_2020`; the 2017 field is named `Y2017` in the service).

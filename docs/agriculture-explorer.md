@@ -5,6 +5,25 @@
 
 This page compares three province-level indicators: wet-season rice planted area, forecast sugarcane planted area, and reported use of agricultural machinery. The records are bundled in `province-data.json`; province geometries are queried from the Thailand province-boundary feature service.
 
+## Flow
+
+```mermaid
+flowchart TD
+    Open[Open /agriculture] --> Map[Create map and attach interaction handlers]
+    Map --> Load[Query province geometries]
+    Load --> Join[Join returned geometries to bundled province records]
+    Join --> Layer[Build thematic feature layer and fit map to provinces]
+    Layer --> Ready[Show selected metric, map, and Top 10]
+    Load -->|Service error or insufficient matches| Error[Show load error]
+    Ready --> Metric[Choose rice, sugarcane, or machinery]
+    Metric --> Renderer[Rebuild choropleth and ranking]
+    Renderer --> Mode{Rice or sugarcane?}
+    Mode -->|Yes| Display[Choose colors or dot density]
+    Mode -->|No| Colors[Use choropleth; dot mode unavailable]
+    Ready --> Hover[Hover or click a province]
+    Hover --> Details[Show province value, rank, and details]
+```
+
 ## Metrics
 
 | Metric | Value shown | Data notes |

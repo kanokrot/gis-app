@@ -5,6 +5,30 @@
 
 The page combines district-level transit-access summaries, Bangkok rail lines and stations, and a fare calculator. The access summaries describe district categories; halo colors use the access share for the containing district and are not measured station catchments.
 
+## Flow
+
+```mermaid
+flowchart TD
+    Open[Open /transit-access] --> Map[Create Bangkok map and interaction handlers]
+    Map --> DistrictQuery[Query Bangkok district geometries]
+    DistrictQuery --> Join[Join geometries to bundled access summaries]
+    Join --> DistrictLayer[Build district layer and fit map]
+    DistrictLayer --> Rail[Load bundled rail lines and stations]
+    Rail --> Graph[Build route graph using verified transfers]
+    Graph --> Ready[Show district access map and rail network]
+    DistrictQuery -->|Service error or failed join| Error[Show district load error]
+    Ready --> Distance[Choose 400 m, 500 m bus-stop, or 1,000 m metric]
+    Distance --> Update[Update district colors and station halos]
+    Ready --> Endpoint[Search for or click origin and destination stations]
+    Endpoint --> Route[Find route using rail graph]
+    Route --> Found{Route found?}
+    Found -->|Yes| Highlight[Draw route and show station/transfer details]
+    Found -->|No| Unavailable[Show no route or station selection guidance]
+    Highlight --> FareData{Fare table available?}
+    FareData -->|Yes| Quote[Calculate operator fare breakdown]
+    FareData -->|No| NoQuote[Show route without fare quote]
+```
+
 ## District access summaries
 
 The compact local summary is [`transit-access-data.json`](../src/app/pages/transit-access-page/transit-access-data.json). It was derived from three data.go.th resources; the original CSVs are not bundled. The summaries cover 400 m public-transport areas, a 500 m `trans_bus_stop` layer, and 1,000 m public-transport areas. District geometries are queried from the Bangkok district feature service.
