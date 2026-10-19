@@ -31,20 +31,24 @@
       <div class="map-attribution">NASA GIBS · VIIRS Black Marble</div>
     </section>
 
-    <section class="insights" aria-label="City brightness and selected city details">
+    <section class="explorer-card" aria-label="Regional city radiance index and city profile">
       <div class="ranking-panel">
-        <div class="section-heading">
-          <div><p class="eyebrow">REGIONAL INDEX · {{ year() }}</p><h2>Brightest cities</h2></div>
-          <span class="unit-label">RADIANCE <span>·</span> REL. UNITS</span>
+        <div class="index-header">
+          <p class="eyebrow">REGIONAL INDEX · {{ year() }}</p>
+          <div class="index-title-row">
+            <h2>Brightest cities</h2>
+            <p class="index-caption">{{ activeRegion() }} <span>·</span> RADIANCE <span>·</span> CHANGE VS 2014</p>
+          </div>
         </div>
         <ol class="ranking-list">
           @for (city of rankedCities(); track city.id; let index = $index) {
             <li>
-              <button type="button" class="rank-row" [class.selected]="selectedCityId() === city.id" [attr.aria-pressed]="selectedCityId() === city.id" (click)="selectCity(city)">
+              <button type="button" class="rank-row" [class.selected]="selectedCityId() === city.id" [attr.aria-pressed]="selectedCityId() === city.id" [attr.aria-label]="city.name + ', ' + city.country + ', radiance ' + formatRadiance(brightness(city)) + ', change ' + changeLabel(city)" (click)="selectCity(city)">
                 <span class="rank-number">{{ (index + 1).toString().padStart(2, '0') }}</span>
-                <span class="city-name">{{ city.name }}</span>
+                <span class="city-place"><span class="city-name">{{ city.name }}</span><span class="city-country">{{ city.country }}</span></span>
                 <span class="bar-track" aria-hidden="true"><span class="bar-fill" [style.width.%]="barWidth(city)"></span></span>
                 <span class="rank-value">{{ formatRadiance(brightness(city)) }}</span>
+                <span class="rank-change">{{ changeLabel(city) }}</span>
               </button>
             </li>
           }
@@ -52,16 +56,27 @@
       </div>
 
       <aside class="detail-panel" aria-live="polite" aria-label="Selected city details">
-        <div class="section-heading detail-heading">
-          <div><p class="eyebrow">CITY PROFILE · {{ year() }}</p><h2>{{ selectedCity().name }}</h2></div>
+        <div class="profile-heading">
+          <p class="eyebrow">CITY PROFILE · {{ year() }}</p>
           <span class="selected-indicator" aria-label="Selected city"></span>
         </div>
-        <p class="coordinates">{{ selectedCity().latitude.toFixed(4) }}° {{ selectedCity().latitude >= 0 ? 'N' : 'S' }} <span>·</span> {{ absoluteLongitude().toFixed(4) }}° {{ selectedCity().longitude >= 0 ? 'E' : 'W' }}</p>
-        <div class="primary-metric"><span>TOTAL RADIANCE</span><strong>{{ formatRadiance(brightness(selectedCity())) }}</strong><small>relative units</small></div>
-        <dl class="detail-metrics">
-          <div><dt>CHANGE <span>2014—2024</span></dt><dd [class.negative]="selectedCity().changePercent < 0">{{ selectedCity().changePercent > 0 ? '+' : '' }}{{ selectedCity().changePercent }}%</dd></div>
-          <div><dt>LIT AREA</dt><dd>{{ formatRadiance(selectedCity().litAreaKm2) }} <small>km²</small></dd></div>
-        </dl>
+        <h2 class="profile-city-name">{{ selectedCity().name }}</h2>
+        <p class="profile-location">{{ selectedCity().country }} <span>·</span> {{ selectedCity().latitude.toFixed(4) }}° {{ selectedCity().latitude >= 0 ? 'N' : 'S' }} {{ absoluteLongitude().toFixed(4) }}° {{ selectedCity().longitude >= 0 ? 'E' : 'W' }}</p>
+        <div class="profile-radiance">
+          <div class="total-radiance"><span>TOTAL RADIANCE</span><strong>{{ formatRadiance(brightness(selectedCity())) }}</strong><small>relative units</small></div>
+          <figure class="sparkline-figure">
+            <svg class="sparkline" viewBox="0 0 120 36" role="img" [attr.aria-label]="sparklineLabel(selectedCity())">
+              <path class="sparkline-line" [attr.d]="sparklinePath(selectedCity())"></path>
+              <circle class="sparkline-end" cx="115" [attr.cy]="sparklineEndY(selectedCity())" r="3.5"></circle>
+            </svg>
+            <figcaption><span>2014</span><span>2024</span></figcaption>
+          </figure>
+        </div>
+        <div class="profile-stats">
+          <div class="stat-tile"><span>LIT AREA</span><strong>{{ formatRadiance(selectedCity().litAreaKm2) }}</strong><small>km²</small></div>
+          <div class="stat-tile"><span>CHANGE VS 2014</span><strong [class.negative]="selectedCity().changePercent < 0">{{ changeLabel(selectedCity()) }}</strong><small>2014—2024</small></div>
+          <div class="stat-tile"><span>REGIONAL RANK</span><strong>#{{ cityRank(selectedCity()).toString().padStart(2, '0') }}</strong><small>of {{ regionCities().length }} cities</small></div>
+        </div>
       </aside>
     </section>
 

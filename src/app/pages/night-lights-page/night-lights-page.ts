@@ -151,6 +151,35 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
     return new Intl.NumberFormat('en', { maximumFractionDigits: 0 }).format(value);
   }
 
+  cityRank(city: City): number {
+    return this.rankedCities().findIndex((candidate) => candidate.id === city.id) + 1;
+  }
+
+  changeLabel(city: City): string {
+    return `${city.changePercent > 0 ? '+' : ''}${city.changePercent}%`;
+  }
+
+  sparklinePath(city: City): string {
+    const first = city.radiance2014;
+    const last = city.radiance2024;
+    const low = Math.min(first, last);
+    const high = Math.max(first, last);
+    const y = (value: number): number => high === low ? 18 : 28 - ((value - low) / (high - low)) * 20;
+    return `M 5 ${y(first).toFixed(1)} L 115 ${y(last).toFixed(1)}`;
+  }
+
+  sparklineEndY(city: City): number {
+    const first = city.radiance2014;
+    const last = city.radiance2024;
+    const low = Math.min(first, last);
+    const high = Math.max(first, last);
+    return high === low ? 18 : 28 - ((last - low) / (high - low)) * 20;
+  }
+
+  sparklineLabel(city: City): string {
+    return `Radiance from 2014 (${this.formatRadiance(city.radiance2014)}) to 2024 (${this.formatRadiance(city.radiance2024)}) relative units`;
+  }
+
   absoluteLongitude(): number {
     return Math.abs(this.selectedCity().longitude);
   }
