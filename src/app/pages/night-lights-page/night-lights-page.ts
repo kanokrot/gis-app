@@ -3,13 +3,13 @@ import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import Map from '@arcgis/core/Map.js';
 import Graphic from '@arcgis/core/Graphic.js';
-import FeatureLayer from '@arcgis/core/layers/FeatureLayer.js';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer.js';
 import WMTSLayer from '@arcgis/core/layers/WMTSLayer.js';
 import TileLayer from '@arcgis/core/layers/TileLayer.js';
 import MapView from '@arcgis/core/views/MapView.js';
 import Swipe from '@arcgis/core/widgets/Swipe.js';
 import Point from '@arcgis/core/geometry/Point.js';
+import TextSymbol from '@arcgis/core/symbols/TextSymbol.js';
 import citiesData from '../../../assets/night-lights/cities.json';
 
 type RegionName = keyof typeof citiesData.regions;
@@ -44,6 +44,8 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
   private nightLights: WMTSLayer | null = null;
   private dayImagery: TileLayer | null = null;
   private swipe: Swipe | null = null;
+  private worldScaleMarkers: boolean | null = null;
+  private cityLabelKey = '';
 
   readonly regions = REGIONS;
   readonly glowLevels: GlowIntensity[] = ['low', 'medium', 'high'];
@@ -57,23 +59,8 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
   readonly selectedCity = signal<City>(citiesData.regions['Southeast Asia'][0]);
   readonly citiesDataNote = `Map imagery: NASA GIBS Black Marble composite. ${citiesData.note}`;
 
-  private readonly cityLayer = new FeatureLayer({
-    title: 'City radiance locations',
-    source: this.featuresFor(this.allCities),
-    definitionExpression: this.cityFilter(citiesData.regions['Southeast Asia']),
-    objectIdField: 'OBJECTID',
-    fields: [
-      { name: 'OBJECTID', alias: 'Object ID', type: 'oid' },
-      { name: 'cityId', alias: 'City ID', type: 'string' },
-      { name: 'name', alias: 'City', type: 'string' },
-      { name: 'radiance2014', alias: '2014 radiance', type: 'double' },
-      { name: 'radiance2024', alias: '2024 radiance', type: 'double' },
-    ],
-    renderer: this.cityRenderer(7),
-    labelingInfo: [this.cityLabelInfo()],
-    labelsVisible: true,
-    popupEnabled: false,
-  });
+  private readonly cityLayer = new GraphicsLayer({ title: 'City radiance locations' });
+  private readonly cityLabelsLayer = new GraphicsLayer({ title: 'City labels' });
   private readonly selectedLayer = new GraphicsLayer({ title: 'Selected city' });
 
   constructor() {
@@ -96,7 +83,7 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
     this.dayImagery = dayImagery;
     const map = new Map({
       basemap: 'dark-gray-vector',
-      layers: [dayImagery, nightLights, this.cityLayer, this.selectedLayer],
+      layers: [dayImagery, nightLights, this.cityLayer, this.cityLabelsLayer, this.selectedLayer],
     });
     this.view = new MapView({
       container: this.mapNode.nativeElement,
@@ -150,13 +137,12 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
     this.activeRegion.set(region);
     const cities = region === 'World' ? this.allCities : citiesData.regions[region];
     this.regionCities.set(cities);
-    this.cityLayer.definitionExpression = region === 'World' ? '1=1' : this.cityFilter(cities);
     const currentSelection = cities.find((city) => city.id === this.selectedCityId());
     const selectedCity = currentSelection ?? cities.reduce((brightest, city) =>
       this.brightness(city) > this.brightness(brightest) ? city : brightest,
     );
     this.selectCity(selectedCity, false);
-    this.updateCityMarkers();
+    this.updateCityMarkers(true);
     const destination = this.regions.find((entry) => entry.name === region)!;
     void this.view?.goTo({ center: destination.center, zoom: destination.zoom }, { duration: 850, easing: 'ease-in-out' });
   }
@@ -226,31 +212,50 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
     if (flyTo) void this.view?.goTo({ center: [city.longitude, city.latitude], zoom: Math.max(this.view?.zoom ?? 6, 6) }, { duration: 650 });
   }
 
-  private cityLabelInfo(): __esri.LabelClassProperties {
+  private citiesToLabel(): City[] {
     const labelAllCities = !this.deepZoom() && this.activeRegion() !== 'World' && (this.view?.zoom ?? 0) >= CITY_LABEL_ALL_ZOOM;
-    return {
-      labelExpressionInfo: { expression: '$feature.name' },
-      where: labelAllCities ? '1=1' : `cityId = '${this.selectedCityId()}'`,
-      labelPlacement: 'above-right',
-      deconflictionStrategy: 'static',
-      symbol: {
-        type: 'text',
-        color: '#fff2cf',
-        haloColor: '#05070d',
-        haloSize: 2.5,
-        font: { family: 'Space Grotesk', size: 11, weight: 'bold' },
-      },
-    };
+    return labelAllCities
+      ? this.regionCities()
+      : this.regionCities().filter((city) => city.id === this.selectedCityId());
   }
 
   private updateCityLabels(): void {
-    this.cityLayer.labelingInfo = [this.cityLabelInfo()];
+    const cities = this.citiesToLabel();
+    const labelKey = cities.map((city) => city.id).join('|');
+    if (labelKey === this.cityLabelKey) return;
+    this.cityLabelKey = labelKey;
+    this.cityLabelsLayer.removeAll();
+    this.cityLabelsLayer.addMany(cities.map((city) => new Graphic({
+      geometry: new Point({ longitude: city.longitude, latitude: city.latitude }),
+      symbol: new TextSymbol({
+        text: city.name,
+        color: '#fff2cf',
+        haloColor: '#05070d',
+        haloSize: 2.5,
+        xoffset: 10,
+        yoffset: 12,
+        font: { family: 'Space Grotesk', size: 11, weight: 'bold' },
+      }),
+    })));
   }
 
-  private updateCityMarkers(): void {
+  private updateCityMarkers(force = false): void {
     const zoom = this.view?.zoom ?? 2;
     const worldScale = this.activeRegion() === 'World' && zoom <= 3;
-    this.cityLayer.renderer = this.cityRenderer(worldScale ? 3 : 7);
+    if (!force && this.worldScaleMarkers === worldScale) return;
+    this.worldScaleMarkers = worldScale;
+    this.cityLayer.removeAll();
+    this.cityLayer.addMany(this.regionCities().map((city) => new Graphic({
+      geometry: new Point({ longitude: city.longitude, latitude: city.latitude }),
+      attributes: { cityId: city.id },
+      symbol: {
+        type: 'simple-marker',
+        style: 'circle',
+        size: worldScale ? 3 : 7,
+        color: '#ffc857',
+        outline: { color: '#241b0b', width: worldScale ? 0.6 : 1.5 },
+      },
+    })));
   }
 
   private updateDeepZoom(): void {
@@ -273,36 +278,6 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
     }
     if (this.dayImagery) this.dayImagery.opacity = dayFade;
     if (this.swipe) this.swipe.visible = isDeep;
-  }
-
-  private cityFilter(cities: readonly City[]): string {
-    return `cityId IN (${cities.map((city) => `'${city.id.replaceAll("'", "''")}'`).join(', ')})`;
-  }
-
-  private cityRenderer(size: number): __esri.SimpleRendererProperties & { type: 'simple' } {
-    return {
-      type: 'simple',
-      symbol: {
-        type: 'simple-marker',
-        style: 'circle',
-        size,
-        color: '#ffc857',
-        outline: { color: '#241b0b', width: size <= 3 ? 0.6 : 1.5 },
-      },
-    };
-  }
-
-  private featuresFor(cities: readonly City[]): Graphic[] {
-    return cities.map((city, index) => new Graphic({
-      geometry: new Point({ longitude: city.longitude, latitude: city.latitude }),
-      attributes: {
-        OBJECTID: index + 1,
-        cityId: city.id,
-        name: city.name,
-        radiance2014: city.radiance2014,
-        radiance2024: city.radiance2024,
-      },
-    }));
   }
 
   private highlightSelectedCity(): void {
