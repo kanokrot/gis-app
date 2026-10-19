@@ -8,10 +8,11 @@ This folder documents the data flow, map layers, interactions, and known limits 
 - [Southern Thailand Flood Explorer](flood-explorer.md) — historical flood recurrence queries and coverage handling.
 - [Agriculture by province](agriculture-explorer.md) — province metrics, choropleths, and dot density.
 - [Bangkok Transit Access Explorer](bangkok-transit-access.md) — district access summaries, rail overlays, and fare-routing data.
+- [Night Lights Explorer](night-lights.md) — NASA night imagery, regional city summaries, and the imagery comparison view.
 
 ## Shared application setup
 
-The site is an Angular application. The main route table is [`src/app/app.routes.ts`](../src/app/app.routes.ts); the four GIS pages are lazy-loaded standalone pages. Package versions and the standard setup commands are in the [root README](../README.md).
+The site is an Angular application. The main route table is [`src/app/app.routes.ts`](../src/app/app.routes.ts); the interactive map pages are lazy-loaded standalone pages. Package versions and the standard setup commands are in the [root README](../README.md).
 
 For local development, install the dependencies and start the Angular development server with `npm install` and `npm start`. `npm run build` creates the production build. The build's `prebuild` hook also runs the article-fetch script, so builds can refresh article data.
 
