@@ -2,6 +2,13 @@
 
 A personal portfolio website built with Angular. Its **HouseBuy** page appears in Projects as **HouseBuy GIS demo**. HouseBuy is an experimental ArcGIS mapping demo; it is not a real estate buying or selling service, and it does not provide live property listings.
 
+## Project previews
+
+| HouseBuy GIS demo | Night Lights Explorer |
+| --- | --- |
+| <img src="docs/images/housebuy.jpg" alt="HouseBuy GIS demo showing Bangkok transport network on a dark map" width="100%"> | <img src="docs/images/night-lights.jpg" alt="Night Lights Explorer showing Southeast Asia night imagery and a selected city profile" width="100%"> |
+| [Project guide](docs/housebuy-gis.md) · Bangkok transport network and OSM places. | [Project guide](docs/night-lights.md) · NASA night imagery and city summaries; summary values are illustrative placeholders. |
+
 ## Features
 
 ### Portfolio website
