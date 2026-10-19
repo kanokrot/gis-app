@@ -27,6 +27,16 @@
           <button type="button" [class.active]="year() === 2024" [attr.aria-pressed]="year() === 2024" (click)="setYear(2024)">2024</button>
         </div>
       </div>
+      @if (deepZoom()) {
+        <div class="swipe-side-label night-side-label">NIGHT</div>
+        <div class="swipe-side-label day-side-label">DAY</div>
+        <div class="glow-control" role="group" aria-label="Glow intensity">
+          <span>GLOW</span>
+          @for (level of glowLevels; track level) {
+            <button type="button" [class.active]="glowIntensity() === level" [attr.aria-pressed]="glowIntensity() === level" [attr.aria-label]="level + ' glow intensity'" (click)="setGlowIntensity(level)">{{ level }}</button>
+          }
+        </div>
+      }
       <div class="map-legend"><span class="legend-light"></span> City radiance <span class="legend-selected"></span> Selected city</div>
       <div class="map-attribution">NASA GIBS · VIIRS Black Marble</div>
     </section>

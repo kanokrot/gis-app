@@ -6,13 +6,16 @@ import Graphic from '@arcgis/core/Graphic.js';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer.js';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer.js';
 import WMTSLayer from '@arcgis/core/layers/WMTSLayer.js';
+import TileLayer from '@arcgis/core/layers/TileLayer.js';
 import MapView from '@arcgis/core/views/MapView.js';
+import Swipe from '@arcgis/core/widgets/Swipe.js';
 import Point from '@arcgis/core/geometry/Point.js';
 import citiesData from '../../../assets/night-lights/cities.json';
 
 type RegionName = keyof typeof citiesData.regions;
 type City = (typeof citiesData.regions)[RegionName][number];
 type Year = 2014 | 2024;
+type GlowIntensity = 'low' | 'medium' | 'high';
 
 const REGIONS: { name: RegionName; center: [number, number]; zoom: number }[] = [
   { name: 'Southeast Asia', center: [108, 11], zoom: 4 },
@@ -20,7 +23,8 @@ const REGIONS: { name: RegionName; center: [number, number]; zoom: number }[] = 
   { name: 'Europe', center: [15, 50], zoom: 4 },
   { name: 'World', center: [12, 20], zoom: 2 },
 ];
-const BLACK_MARBLE_MAX_ZOOM = 8;
+const BLACK_MARBLE_NATIVE_MAX_ZOOM = 8;
+const DEEP_ZOOM_MAX_ZOOM = 14;
 const CITY_LABEL_ALL_ZOOM = 6;
 
 @Component({
@@ -37,10 +41,16 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
   private clickHandle: { remove(): void } | null = null;
   private zoomHandle: { remove(): void } | null = null;
   private disposed = false;
+  private nightLights: WMTSLayer | null = null;
+  private dayImagery: TileLayer | null = null;
+  private swipe: Swipe | null = null;
 
   readonly regions = REGIONS;
+  readonly glowLevels: GlowIntensity[] = ['low', 'medium', 'high'];
   readonly activeRegion = signal<RegionName>('Southeast Asia');
   readonly year = signal<Year>(2024);
+  readonly deepZoom = signal(false);
+  readonly glowIntensity = signal<GlowIntensity>('medium');
   readonly selectedCityId = signal<string>('bangkok');
   readonly allCities = Object.values(citiesData.regions).flat() as City[];
   readonly regionCities = signal<City[]>(citiesData.regions['Southeast Asia']);
@@ -77,16 +87,23 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
       title: 'NASA VIIRS Black Marble',
       opacity: 0.96,
     });
+    const dayImagery = new TileLayer({
+      url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer',
+      title: 'Esri World Imagery',
+      opacity: 0,
+    });
+    this.nightLights = nightLights;
+    this.dayImagery = dayImagery;
     const map = new Map({
       basemap: 'dark-gray-vector',
-      layers: [nightLights, this.cityLayer, this.selectedLayer],
+      layers: [dayImagery, nightLights, this.cityLayer, this.selectedLayer],
     });
     this.view = new MapView({
       container: this.mapNode.nativeElement,
       map,
       center: [108, 11],
       zoom: 4,
-      constraints: { minZoom: 2, maxZoom: BLACK_MARBLE_MAX_ZOOM, snapToZoom: false, rotationEnabled: false },
+      constraints: { minZoom: 2, maxZoom: DEEP_ZOOM_MAX_ZOOM, snapToZoom: false, rotationEnabled: false },
       background: { color: '#05070d' },
       ui: { components: ['attribution'] },
     });
@@ -94,10 +111,22 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
       if (this.disposed || !this.view) return;
       // The vector dark-gray basemap separates its canvas from the place-label reference layer.
       this.view.map?.basemap?.referenceLayers.removeAll();
+      this.swipe = new Swipe({
+        view: this.view,
+        direction: 'vertical',
+        position: 50,
+        leadingLayers: [nightLights],
+        trailingLayers: [dayImagery],
+        dragLabel: 'Swipe to compare night lights and daytime satellite imagery',
+      });
+      this.view.ui.add(this.swipe, 'manual');
+      this.swipe.visible = false;
       this.zoomHandle = this.view.watch('zoom', () => {
+        this.updateDeepZoom();
         this.updateCityLabels();
         this.updateCityMarkers();
       });
+      this.updateDeepZoom();
       this.updateCityLabels();
       this.updateCityMarkers();
       this.clickHandle = this.view.on('click', async (event) => {
@@ -109,7 +138,12 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
       });
       this.highlightSelectedCity();
     }).catch(() => undefined);
-    void nightLights.load().catch((error) => console.warn('NASA GIBS Black Marble layer could not load', error));
+    void Promise.all([nightLights.load(), dayImagery.load()]).catch((error) => console.warn('Night Lights imagery could not load', error));
+  }
+
+  setGlowIntensity(intensity: GlowIntensity): void {
+    this.glowIntensity.set(intensity);
+    this.updateDeepZoom();
   }
 
   setRegion(region: RegionName): void {
@@ -193,7 +227,7 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
   }
 
   private cityLabelInfo(): __esri.LabelClassProperties {
-    const labelAllCities = this.activeRegion() !== 'World' && (this.view?.zoom ?? 0) >= CITY_LABEL_ALL_ZOOM;
+    const labelAllCities = !this.deepZoom() && this.activeRegion() !== 'World' && (this.view?.zoom ?? 0) >= CITY_LABEL_ALL_ZOOM;
     return {
       labelExpressionInfo: { expression: '$feature.name' },
       where: labelAllCities ? '1=1' : `cityId = '${this.selectedCityId()}'`,
@@ -217,6 +251,28 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
     const zoom = this.view?.zoom ?? 2;
     const worldScale = this.activeRegion() === 'World' && zoom <= 3;
     this.cityLayer.renderer = this.cityRenderer(worldScale ? 3 : 7);
+  }
+
+  private updateDeepZoom(): void {
+    const zoom = this.view?.zoom ?? 2;
+    const isDeep = zoom > BLACK_MARBLE_NATIVE_MAX_ZOOM;
+    this.deepZoom.set(isDeep);
+
+    const intensity = {
+      low: { opacity: 0.48, blur: 2 },
+      medium: { opacity: 0.68, blur: 3 },
+      high: { opacity: 0.88, blur: 4 },
+    }[this.glowIntensity()];
+    const dayFade = isDeep ? Math.min(1, Math.max(0, (zoom - BLACK_MARBLE_NATIVE_MAX_ZOOM) / 1.2)) : 0;
+    const scaledBlur = Math.min(18, Math.round(intensity.blur * 2 ** Math.max(0, zoom - BLACK_MARBLE_NATIVE_MAX_ZOOM)));
+
+    if (this.nightLights) {
+      this.nightLights.blendMode = isDeep ? 'screen' : 'normal';
+      this.nightLights.opacity = isDeep ? intensity.opacity : 0.96;
+      this.nightLights.effect = isDeep ? `blur(${scaledBlur}px) brightness(1.3)` : null;
+    }
+    if (this.dayImagery) this.dayImagery.opacity = dayFade;
+    if (this.swipe) this.swipe.visible = isDeep;
   }
 
   private cityFilter(cities: readonly City[]): string {
