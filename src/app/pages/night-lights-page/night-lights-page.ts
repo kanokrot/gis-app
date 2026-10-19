@@ -25,6 +25,8 @@ const REGIONS: { name: RegionName; center: [number, number]; zoom: number }[] = 
 ];
 const BLACK_MARBLE_NATIVE_MAX_ZOOM = 8;
 const DEEP_ZOOM_MAX_ZOOM = 14;
+const GIBS_TILE_MATRIX_SET = 'GoogleMapsCompatible_Level8';
+const GIBS_TILE_RETRY_ATTEMPTS = 2;
 const CITY_LABEL_ALL_ZOOM = 6;
 
 @Component({
@@ -46,12 +48,15 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
   private swipe: Swipe | null = null;
   private worldScaleMarkers: boolean | null = null;
   private cityLabelKey = '';
+  private pendingNightTileRequests = 0;
 
   readonly regions = REGIONS;
   readonly glowLevels: GlowIntensity[] = ['low', 'medium', 'high'];
   readonly activeRegion = signal<RegionName>('Southeast Asia');
   readonly year = signal<Year>(2024);
   readonly deepZoom = signal(false);
+  readonly tilesLoading = signal(false);
+  readonly tileLoadError = signal(false);
   readonly glowIntensity = signal<GlowIntensity>('medium');
   readonly selectedCityId = signal<string>('bangkok');
   readonly allCities = Object.values(citiesData.regions).flat() as City[];
@@ -70,14 +75,16 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     const nightLights = new WMTSLayer({
       url: 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best',
-      activeLayer: { id: 'VIIRS_Black_Marble' },
+      activeLayer: { id: 'VIIRS_Black_Marble', tileMatrixSetId: GIBS_TILE_MATRIX_SET },
       title: 'NASA VIIRS Black Marble',
       opacity: 0.96,
     });
+    this.addTileRetries(nightLights);
     const dayImagery = new TileLayer({
       url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer',
       title: 'Esri World Imagery',
       opacity: 0,
+      visible: false,
     });
     this.nightLights = nightLights;
     this.dayImagery = dayImagery;
@@ -125,7 +132,16 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
       });
       this.highlightSelectedCity();
     }).catch(() => undefined);
-    void Promise.all([nightLights.load(), dayImagery.load()]).catch((error) => console.warn('Night Lights imagery could not load', error));
+    void nightLights.load().catch((error) => {
+      this.tileLoadError.set(true);
+      console.warn('NASA GIBS Black Marble layer could not load', error);
+    });
+  }
+
+  retryNightTiles(): void {
+    if (!this.nightLights) return;
+    this.tileLoadError.set(false);
+    this.nightLights.refresh();
   }
 
   setGlowIntensity(intensity: GlowIntensity): void {
@@ -277,8 +293,35 @@ export class NightLightsPage implements AfterViewInit, OnDestroy {
       this.nightLights.opacity = isDeep ? intensity.opacity : 0.96;
       this.nightLights.effect = isDeep ? `blur(${scaledBlur}px) brightness(1.3)` : null;
     }
-    if (this.dayImagery) this.dayImagery.opacity = dayFade;
+    if (this.dayImagery) {
+      this.dayImagery.opacity = dayFade;
+      this.dayImagery.visible = isDeep;
+    }
     if (this.swipe) this.swipe.visible = isDeep;
+  }
+
+  private addTileRetries(layer: WMTSLayer): void {
+    const fetchTile = layer.fetchTile.bind(layer);
+    layer.fetchTile = async (level, row, col, options) => {
+      this.pendingNightTileRequests += 1;
+      this.tilesLoading.set(true);
+      try {
+        for (let attempt = 0; ; attempt += 1) {
+          try {
+            return await fetchTile(level, row, col, options);
+          } catch (error) {
+            if (options?.signal?.aborted || attempt >= GIBS_TILE_RETRY_ATTEMPTS) {
+              this.tileLoadError.set(true);
+              throw error;
+            }
+            await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)));
+          }
+        }
+      } finally {
+        this.pendingNightTileRequests -= 1;
+        this.tilesLoading.set(this.pendingNightTileRequests > 0);
+      }
+    };
   }
 
   private highlightSelectedCity(): void {

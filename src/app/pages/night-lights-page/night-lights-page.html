@@ -37,6 +37,17 @@
           }
         </div>
       }
+      @if (tilesLoading() || tileLoadError()) {
+        <div class="tile-status" [class.tile-status-error]="tileLoadError()" [attr.role]="tileLoadError() ? 'alert' : 'status'" aria-live="polite">
+          @if (tileLoadError()) {
+            <span>Some NASA tiles did not load.</span>
+            <button type="button" (click)="retryNightTiles()">Retry</button>
+          } @else {
+            <span class="tile-status-dot" aria-hidden="true"></span>
+            <span>Loading night tiles</span>
+          }
+        </div>
+      }
       <div class="map-legend"><span class="legend-light"></span> City radiance <span class="legend-selected"></span> Selected city</div>
       <div class="map-attribution">NASA GIBS · VIIRS Black Marble</div>
     </section>
